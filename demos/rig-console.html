@@ -1,0 +1,296 @@
+<title>Rig Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#E7E4DA; --panel:#F4F2EA; --panel-2:#ECE9DF; --ink:#1E2226; --ink-dim:#5C6169;
+    --line:#CFCBBE; --accent:#A85A16; --accent-ink:#7A400E; --accent-soft:#E8D4BC;
+    --teal:#2E7A73; --teal-soft:#D9E7E4;
+    --good:#2E7A73; --warn:#B58A2E; --danger:#B5482F;
+    --font-display:'Big Shoulders Display',Impact,'Arial Narrow',sans-serif;
+    --font-body:'IBM Plex Sans',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,'Courier New',monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#14181C; --panel:#1B2126; --panel-2:#20272D; --ink:#E7E2D6; --ink-dim:#98A0A6;
+      --line:#323A40; --accent:#FFB454; --accent-ink:#FFB454; --accent-soft:#3A3220;
+      --teal:#7FC7C0; --teal-soft:#1D2E2C;
+      --good:#7FC7C0; --warn:#D9AE5C; --danger:#E2836C;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14181C; --panel:#1B2126; --panel-2:#20272D; --ink:#E7E2D6; --ink-dim:#98A0A6;
+    --line:#323A40; --accent:#FFB454; --accent-ink:#FFB454; --accent-soft:#3A3220;
+    --teal:#7FC7C0; --teal-soft:#1D2E2C;
+    --good:#7FC7C0; --warn:#D9AE5C; --danger:#E2836C;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body);}
+  .wrap{max-width:1120px;margin:0 auto;padding:40px 24px 80px;}
+  .eyebrow{font-family:var(--font-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--teal); display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+  .eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--teal);display:inline-block;}
+  h1{font-family:var(--font-display); font-weight:800; font-size:clamp(40px,7vw,72px); line-height:0.92; margin:0 0 14px; text-transform:uppercase; text-wrap:balance;}
+  .dek{max-width:660px; font-size:15.5px; line-height:1.65; color:var(--ink-dim); margin:0 0 6px;}
+  .dek strong{color:var(--ink); font-weight:600;}
+  .source{font-family:var(--font-mono); font-size:11.5px; color:var(--ink-dim); margin:14px 0 30px;}
+
+  .board{display:grid; grid-template-columns:1fr 300px; gap:20px;}
+  @media (max-width:900px){ .board{grid-template-columns:1fr;} }
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:20px;}
+  .panel h2{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-dim); margin:0 0 16px; padding-bottom:10px; border-bottom:1px solid var(--line);}
+
+  .gauges{display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:20px;}
+  @media (max-width:560px){ .gauges{grid-template-columns:1fr 1fr;} }
+  .gauge-card{background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:10px; text-align:center;}
+  .gauge-card canvas{width:100%; height:auto;}
+  .gauge-card .gv{font-family:var(--font-mono); font-size:15px; font-weight:600; margin-top:2px;}
+  .gauge-card .gl{font-family:var(--font-mono); font-size:9.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-dim);}
+
+  .controls-row{display:flex; gap:20px; flex-wrap:wrap; align-items:flex-start;}
+  .joy-block{text-align:center;}
+  .joy-block .jl{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-dim); margin-bottom:8px;}
+  .joy-track{width:120px; height:120px; border-radius:50%; background:var(--panel-2); border:2px solid var(--line); position:relative; touch-action:none;}
+  .joy-knob{width:40px; height:40px; border-radius:50%; background:var(--accent); position:absolute; left:40px; top:40px; cursor:grab; box-shadow:0 2px 6px rgba(0,0,0,.25);}
+
+  .tank{flex:1; min-width:160px;}
+  .tank .lab{display:flex; justify-content:space-between; font-size:12px; font-weight:600; margin-bottom:8px;}
+  .tank .lab span:last-child{font-family:var(--font-mono); color:var(--accent-ink);}
+  .tank-track{height:16px; border-radius:8px; background:var(--panel-2); border:1px solid var(--line); overflow:hidden; margin-bottom:10px;}
+  .tank-fill{height:100%; background:var(--teal); transition:width .1s;}
+  .tank-fill.warn{background:var(--warn);} .tank-fill.danger{background:var(--danger);}
+  input[type="range"]{width:100%; -webkit-appearance:none; appearance:none; height:4px; border-radius:2px; background:var(--line); outline:none;}
+  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:var(--accent); border:2px solid var(--panel); box-shadow:0 0 0 1px var(--accent); cursor:pointer;}
+
+  .side{display:flex; flex-direction:column; gap:20px;}
+  .session-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .session-row .status-pill{font-family:var(--font-mono); font-size:11px; padding:4px 10px; border-radius:10px; background:var(--panel-2); border:1px solid var(--line); color:var(--ink-dim);}
+  .session-row .status-pill.rec{background:#F0D9D1; color:var(--danger); border-color:var(--danger);}
+  .btn{width:100%; font-family:var(--font-mono); font-size:12px; padding:10px; border-radius:7px; border:1px solid var(--accent); background:var(--accent); color:#fff; cursor:pointer;}
+  .btn.stop{background:var(--panel-2); color:var(--ink); border-color:var(--line);}
+
+  .log{font-family:var(--font-mono); font-size:11px; line-height:1.7; max-height:280px; overflow-y:auto; color:var(--ink-dim);}
+  .log .t{opacity:.6;}
+  .log .warn{color:var(--warn);}
+  .log .ok{color:var(--good);}
+
+  footer{margin-top:56px; padding-top:20px; border-top:1px solid var(--line); font-family:var(--font-mono); font-size:11.5px; color:var(--ink-dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+  footer a{color:var(--ink-dim); text-decoration:none; border-bottom:1px dotted var(--ink-dim);}
+  footer a:hover{color:var(--accent-ink); border-color:var(--accent-ink);}
+
+  .video-panel{margin-top:20px;}
+  .video-frame{position:relative; width:100%; aspect-ratio:16/9; border-radius:8px; overflow:hidden; background:var(--panel-2); border:1px solid var(--line);}
+  .video-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .video-note{font-family:var(--font-mono); font-size:11px; color:var(--ink-dim); margin-top:10px; line-height:1.5;}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Tronixs Egypt &middot; Virtual Drilling Rig Simulator</div>
+  <h1>Rig Console</h1>
+  <p class="dek">Dual joysticks for hoist and rotary, a touch-screen mud-tank monitor, and an instructor station watching every threshold. Drag the sticks and the pump slider &mdash; the gauges and the trainee log respond live.</p>
+  <p class="source">MODEL &middot; illustrative instrument response, not real rig telemetry.</p>
+
+  <div class="board">
+    <div class="panel">
+      <h2>Driller's Instruments</h2>
+      <div class="gauges" id="gauges"></div>
+
+      <div class="controls-row">
+        <div class="joy-block">
+          <div class="jl">Hoist / WOB</div>
+          <div class="joy-track" id="joy1"><div class="joy-knob" id="knob1"></div></div>
+        </div>
+        <div class="joy-block">
+          <div class="jl">Rotary / RPM</div>
+          <div class="joy-track" id="joy2"><div class="joy-knob" id="knob2"></div></div>
+        </div>
+        <div class="tank">
+          <div class="lab"><span>Mud Pump Rate</span><span id="pump-val">40%</span></div>
+          <input type="range" id="pump" min="0" max="100" value="40">
+          <div class="lab" style="margin-top:14px;"><span>Mud Tank Level</span><span id="tank-val">62%</span></div>
+          <div class="tank-track"><div class="tank-fill" id="tank-fill" style="width:62%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="side">
+      <div class="panel">
+        <h2>Instructor Station</h2>
+        <div class="session-row">
+          <span>Session</span>
+          <span class="status-pill" id="sess-pill">Stopped</span>
+        </div>
+        <button class="btn" id="sess-btn">Start Session</button>
+      </div>
+      <div class="panel">
+        <h2>Trainee Log</h2>
+        <div class="log" id="log"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel video-panel">
+    <h2>Demo Video</h2>
+    <div class="video-frame">
+      <iframe src="https://www.youtube-nocookie.com/embed/GJZHqVd9IK4" title="Rig Console demo video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="video-note">Video #7 &mdash; Rig Console demo (YouTube).</div>
+  </div>
+
+  <footer>
+    <span>PROOF-OF-CONCEPT &middot; SHERIF HOSSAM</span>
+    <a href="../index.html#demos">&larr; Back to Portfolio</a>
+  </footer>
+</div>
+
+<script>
+const GAUGES = [
+  {key:'wob', label:'Weight on Bit', unit:'klb', max:60, danger:50},
+  {key:'rpm', label:'Rotary RPM', unit:'rpm', max:200, danger:170},
+  {key:'pressure', label:'Mud Pressure', unit:'psi', max:5000, danger:4300}
+];
+
+const gaugesWrap = document.getElementById('gauges');
+gaugesWrap.innerHTML = GAUGES.map(g => `
+  <div class="gauge-card" data-key="${g.key}">
+    <canvas width="160" height="110"></canvas>
+    <div class="gv">0 <span style="font-weight:400;color:var(--ink-dim);font-size:10px;">${g.unit}</span></div>
+    <div class="gl">${g.label}</div>
+  </div>`).join('');
+
+const state = {wob:0, rpm:0, pressure:0, pump:40, tank:62, recording:false, sessionOn:false};
+let hoistVal = 0, rotaryVal = 0;
+
+function setupJoystick(trackId, knobId, onChange){
+  const track = document.getElementById(trackId);
+  const knob = document.getElementById(knobId);
+  const R = 40;
+  let dragging = false;
+
+  function set(dx, dy){
+    const dist = Math.min(R, Math.hypot(dx,dy));
+    const ang = Math.atan2(dy,dx);
+    const x = Math.cos(ang)*dist, y = Math.sin(ang)*dist;
+    knob.style.left = (60+x-20) + 'px';
+    knob.style.top = (60+y-20) + 'px';
+    onChange(-y/R);
+  }
+  function reset(){
+    knob.style.left='40px'; knob.style.top='40px'; onChange(0);
+  }
+  function pos(e){
+    const rect = track.getBoundingClientRect();
+    const cx = (e.touches ? e.touches[0].clientX : e.clientX) - rect.left - rect.width/2;
+    const cy = (e.touches ? e.touches[0].clientY : e.clientY) - rect.top - rect.height/2;
+    return [cx,cy];
+  }
+  knob.addEventListener('pointerdown', e => { dragging = true; knob.setPointerCapture(e.pointerId); });
+  track.addEventListener('pointermove', e => { if(!dragging) return; const [x,y]=pos(e); set(x,y); });
+  knob.addEventListener('pointerup', () => { dragging=false; reset(); });
+  knob.addEventListener('pointercancel', () => { dragging=false; reset(); });
+}
+
+setupJoystick('joy1','knob1', v => hoistVal = v);
+setupJoystick('joy2','knob2', v => rotaryVal = v);
+
+const pumpSlider = document.getElementById('pump');
+pumpSlider.addEventListener('input', () => {
+  state.pump = parseInt(pumpSlider.value,10);
+  document.getElementById('pump-val').textContent = state.pump + '%';
+});
+
+function drawGauge(canvas, value, max, danger, label){
+  const ctx = canvas.getContext('2d');
+  const css = getComputedStyle(document.documentElement);
+  const line = css.getPropertyValue('--line').trim();
+  const ink = css.getPropertyValue('--ink').trim();
+  const good = css.getPropertyValue('--good').trim();
+  const dangerC = css.getPropertyValue('--danger').trim();
+  const w = canvas.width, h = canvas.height;
+  const cx = w/2, cy = h*0.85, r = h*0.72;
+  const startA = Math.PI*1.0, endA = Math.PI*2.0;
+
+  ctx.clearRect(0,0,w,h);
+  ctx.lineWidth = 10; ctx.lineCap='round';
+  ctx.strokeStyle = line;
+  ctx.beginPath(); ctx.arc(cx,cy,r,startA,endA); ctx.stroke();
+
+  const dangerFrac = danger/max;
+  ctx.strokeStyle = dangerC;
+  ctx.beginPath(); ctx.arc(cx,cy,r, startA+(endA-startA)*dangerFrac, endA); ctx.stroke();
+
+  const frac = Math.min(1, value/max);
+  ctx.strokeStyle = value >= danger ? dangerC : good;
+  ctx.beginPath(); ctx.arc(cx,cy,r, startA, startA+(endA-startA)*frac); ctx.stroke();
+
+  const needleA = startA + (endA-startA)*frac;
+  ctx.strokeStyle = ink; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+Math.cos(needleA)*(r-14), cy+Math.sin(needleA)*(r-14)); ctx.stroke();
+  ctx.fillStyle = ink; ctx.beginPath(); ctx.arc(cx,cy,4,0,Math.PI*2); ctx.fill();
+}
+
+function logMsg(html, cls){
+  const el = document.getElementById('log');
+  const time = new Date().toLocaleTimeString('en-US',{hour12:false});
+  const line = document.createElement('div');
+  line.innerHTML = `<span class="t">${time}</span> <span class="${cls||''}">${html}</span>`;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+  while(el.children.length > 60) el.removeChild(el.firstChild);
+}
+
+let lastWarn = {};
+function checkThreshold(g, value){
+  if(!state.sessionOn) return;
+  const key = g.key;
+  if(value >= g.danger && !lastWarn[key]){
+    logMsg(`Caution: ${g.label} above safe threshold (${Math.round(value)} ${g.unit})`, 'warn');
+    lastWarn[key] = true;
+  } else if(value < g.danger*0.9 && lastWarn[key]){
+    lastWarn[key] = false;
+  }
+}
+
+document.getElementById('sess-btn').addEventListener('click', () => {
+  state.sessionOn = !state.sessionOn;
+  const btn = document.getElementById('sess-btn');
+  const pill = document.getElementById('sess-pill');
+  if(state.sessionOn){
+    btn.textContent = 'Stop Session'; btn.classList.add('stop');
+    pill.textContent = 'Recording'; pill.classList.add('rec');
+    lastWarn = {};
+    logMsg('Session started — recording trainee inputs', 'ok');
+  } else {
+    btn.textContent = 'Start Session'; btn.classList.remove('stop');
+    pill.textContent = 'Stopped'; pill.classList.remove('rec');
+    logMsg('Session stopped — recording saved');
+  }
+});
+
+function loop(){
+  state.wob += (Math.max(0,hoistVal)*GAUGES[0].max - state.wob) * 0.08;
+  state.rpm += (Math.max(0,rotaryVal)*GAUGES[1].max - state.rpm) * 0.08;
+  const targetPressure = (state.pump/100) * GAUGES[2].max * (0.5 + Math.max(0,rotaryVal)*0.6);
+  state.pressure += (targetPressure - state.pressure) * 0.06;
+
+  state.tank += ((70 - state.pump*0.35) - state.tank) * 0.01;
+  state.tank = Math.max(4, Math.min(96, state.tank));
+
+  GAUGES.forEach(g => {
+    const card = gaugesWrap.querySelector(`[data-key="${g.key}"]`);
+    const val = state[g.key];
+    drawGauge(card.querySelector('canvas'), val, g.max, g.danger, g.label);
+    card.querySelector('.gv').innerHTML = Math.round(val) + ` <span style="font-weight:400;color:var(--ink-dim);font-size:10px;">${g.unit}</span>`;
+    checkThreshold(g, val);
+  });
+
+  const tankFill = document.getElementById('tank-fill');
+  tankFill.style.width = state.tank + '%';
+  tankFill.className = 'tank-fill' + (state.tank < 20 ? ' danger' : state.tank < 35 ? ' warn' : '');
+  document.getElementById('tank-val').textContent = Math.round(state.tank) + '%';
+
+  requestAnimationFrame(loop);
+}
+loop();
+</script>

@@ -1,1 +1,140 @@
-﻿<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Games &amp; Puzzles</title><style>:root{--bg:#10131a;--fg:#eef1f7;--card:#1b2030;--acc:#6ea8ff}@media(prefers-color-scheme:light){:root{--bg:#f4f6fb;--fg:#161a24;--card:#fff;--acc:#2f6fe0}}*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:var(--bg);color:var(--fg);font-family:system-ui,sans-serif;padding:16px}main{width:100%;max-width:760px}h1{text-align:center;margin:0 0 24px}.g{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}a{display:block;padding:28px 20px;border-radius:16px;background:var(--card);color:inherit;text-decoration:none;border:2px solid transparent;box-shadow:0 2px 10px #0003}a:hover{border-color:var(--acc)}a b{display:block;font-size:1.3rem;margin-bottom:6px}a span{opacity:.7}</style></head><body><main><h1>Games &amp; Puzzles</h1><div class="g"><a href="games/"><b>🎮 70 Classic Games</b><span>Tetris, Snake, Chess, Sudoku and many more</span></a> <a href="cube-solver/"><b>🧊 Cube Solver</b><span>3D puzzle solver: cubes, Megaminx, Pyraminx and more</span></a></div></main></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sherif Hossam – Portfolio, Games &amp; Puzzles</title>
+<meta name="description" content="Sherif Hossam – Unity / C# developer. Portfolio demos, 70 classic games and a 3D cube solver.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#E7E4DA;--panel:#F4F2EA;--ink:#1E2226;--dim:#5C6169;--line:#CFCBBE;--accent:#A85A16;--accent-ink:#7A400E;--teal:#2E7A73;--teal-soft:#D9E7E4;
+--d:'Big Shoulders Display',Impact,sans-serif;--b:'IBM Plex Sans',system-ui,sans-serif;--m:'IBM Plex Mono',ui-monospace,monospace}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14181C;--panel:#1B2126;--ink:#E7E2D6;--dim:#98A0A6;--line:#323A40;--accent:#FFB454;--accent-ink:#FFB454;--teal:#7FC7C0;--teal-soft:#1D2E2C}}
+:root[data-theme=dark]{--bg:#14181C;--panel:#1B2126;--ink:#E7E2D6;--dim:#98A0A6;--line:#323A40;--accent:#FFB454;--accent-ink:#FFB454;--teal:#7FC7C0;--teal-soft:#1D2E2C}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--b);background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:28px 28px}
+a{color:inherit}.wrap{max-width:1120px;margin:0 auto;padding:24px 16px 80px}
+nav{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-family:var(--m);font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin-bottom:48px}
+nav a,nav button{text-decoration:none;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--ink);font:inherit;text-transform:inherit;letter-spacing:inherit;cursor:pointer}
+nav a:hover,nav button:hover{border-color:var(--accent)}nav .sp{flex:1}
+.eyebrow{font-family:var(--m);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);display:flex;align-items:center;gap:8px;margin-bottom:14px}
+.eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px var(--teal-soft)}
+h1{font-family:var(--d);font-weight:900;font-size:clamp(52px,10vw,112px);line-height:.88;margin:0 0 20px;text-transform:uppercase}
+.dek{max-width:660px;font-size:16.5px;line-height:1.65;color:var(--dim);margin:0 0 22px}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 18px;border-radius:10px;border:1px solid var(--ink);text-decoration:none;font-family:var(--m);font-size:13px;font-weight:600}
+.btn.pri{background:var(--ink);color:var(--bg)}.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+.btn svg{width:18px;height:18px;fill:currentColor}
+.meta{font-family:var(--m);font-size:11.5px;color:var(--dim);margin:28px 0 56px;display:flex;gap:20px;flex-wrap:wrap;padding-top:18px;border-top:1px solid var(--line)}.meta b{color:var(--ink)}
+section{margin-bottom:64px;scroll-margin-top:16px}
+h2{font-family:var(--d);font-size:38px;text-transform:uppercase;margin:0 0 6px}
+.sub{color:var(--dim);margin:0 0 20px;font-size:14.5px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+input[type=search]{flex:1;min-width:200px;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--panel);color:var(--ink);font:inherit}
+input[type=search]:focus{outline:2px solid var(--accent);border-color:transparent}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.grid.small{grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column;text-decoration:none;transition:transform .15s,border-color .15s}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.co{font-family:var(--m);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim)}
+.role{font-family:var(--d);font-size:25px;font-weight:700;text-transform:uppercase;line-height:1.05;margin:4px 0 2px}
+.years{font-family:var(--m);font-size:11px;color:var(--dim);margin-bottom:14px}
+.reading{margin-top:auto;padding-top:12px;border-top:1px dashed var(--line)}
+.num{font-family:var(--d);font-size:32px;font-weight:800;color:var(--accent-ink);line-height:1}
+.lab{font-size:12px;color:var(--dim);margin-top:4px;line-height:1.45}
+.go{margin-top:14px;font-family:var(--m);font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--accent-ink);font-weight:600}
+.game{padding:12px 14px}.game .n{font-family:var(--m);font-size:11px;color:var(--teal)}.game .t{font-weight:600;font-size:15px;margin-top:2px}
+.empty{color:var(--dim);font-family:var(--m);padding:20px 0}
+footer{padding-top:20px;border-top:1px solid var(--line);font-family:var(--m);font-size:11.5px;color:var(--dim);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav id="nav"></nav>
+
+  <header id="top">
+    <div class="eyebrow" id="role"></div>
+    <h1 id="name"></h1>
+    <p class="dek" id="bio"></p>
+    <div class="btns" id="links"></div>
+    <div class="meta" id="stats"></div>
+  </header>
+
+  <section id="demos"><h2>Portfolio Demos</h2><p class="sub">Career highlights rebuilt as small interactive proofs-of-concept.</p><div class="grid" id="demoGrid"></div></section>
+
+  <section id="games"><h2>Classic Games</h2><p class="sub" id="gamesSub"></p>
+    <div class="tools"><input type="search" id="q" placeholder="Search games…" aria-label="Search games"></div>
+    <div class="grid small" id="gameGrid"></div></section>
+
+  <section id="puzzles"><h2>Puzzles</h2><p class="sub">3D puzzle tools.</p><div class="grid" id="toolGrid"></div></section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const PROFILE={
+  name:'Sherif Hossam',
+  role:'Unity / C# Developer · Cairo, Egypt',
+  bio:'Ten years of CV bullets turned back into working code — plus a collection of classic games and puzzles I keep playable in the browser.',
+  github:'https://github.com/ShirefHK',
+  githubUser:'ShirefHK',
+  since:2013
+};
+const DEMOS=[
+ {file:'mesh-weight',co:'PlanRadar · BIM Viewer',title:'Mesh Weight',years:'Dec 2021 – Present',num:'−92%',lab:'GPU-instanced batched loading cut mesh memory on the heaviest models from 3.56 GB to 272.5 MB.'},
+ {file:'block-runner',co:'BE-STEAM · WRO Simulator',title:'Block Runner',years:'Mar 2020 – Dec 2021',num:'Blocks→Script',lab:'Drag-and-drop blocks compile to Python-style script and drive a robot through a scored mission grid.'},
+ {file:'room-fit',co:'Elibre DMCC · VR/AR Pipeline',title:'Room Fit',years:'Oct 2017 – May 2021',num:'Auto-Fit',lab:"A greedy space-fitting engine lays out furniture against a room's real dimensions and skips what won't fit."},
+ {file:'talk-loop',co:'INTDV · AI Chatbot Avatar',title:'Talk Loop',years:'Aug – Oct 2021',num:'STT → TTS',lab:'Speech-to-text into a backend, IBM Watson TTS back out, synced to facial/mouth animation via SALSA.'},
+ {file:'exposure-room',co:'Arabtesting · Therapeutic VR',title:'Exposure Room',years:'Jul – Oct 2019',num:'Self-Paced',lab:'Graduated exposure-therapy scenarios for acrophobia and claustrophobia, plus dyslexia support tools.'},
+ {file:'shop-sync',co:'Arab Builders · Simulation of City',title:'Shop Sync',years:'Dec 2016 – Oct 2017',num:'N↔N',lab:'A Node.js multiplayer server synced every connected shopper in a live 3D world over a socket API.'},
+ {file:'rig-console',co:'Tronixs Egypt · Drilling Rig Sim',title:'Rig Console',years:'Sep 2016 – Feb 2017',num:'Dual-Stick',lab:"Hardware-accurate driller's chair controls and mud-tank monitoring, with a live instructor station."},
+ {file:'advergame-set',co:'Freelancer.com · Contract Work',title:'Advergame Set',years:'May 2013 – Oct 2016',num:'3+ yrs',lab:'Educational mini-games and promotional advergames delivered for international clients.'}
+];
+const GAMES=['01 Tetris','02 Doodle Jump','03 Arkanoid','04 Snake','05 Minesweeper','06 Fifteen-Puzzle','07 Racing (Top Down)','08 Outrun','09 Xonix','10 Bejeweled','11 NetWalk (Pipe Puzzle)','12 Mahjong Solitaire','13 Tron','14 Chess','15 Volleyball','16 Asteroids','17 Tetris Attack','18 SameGame','19 Cogs','20 SquareLogic','21 Bookworm','22 Picross','23 SpaceChem','24 Sokoban','25 2048','26 4-to-Win','27 Reversi','28 Strike5','29 Pitfall','30 Gridlock','31 Trio','32 Gridwords','33 Quadwords','34 Quintext','35 Crosstext','36 Quiz','37 Sudoku','38 Sudoku Mini','39 Sudoku Kika','40 Sudoku Extra','41 Sudoku Farb','42 Sudoku Rainbow','43 Sudoku Diagonal','44 Killer Sudoku','45 Killer Sudoku Kika','46 Killer Sudoku Farb','47 Killer Sudoku Diagonal','48 Kropki Sudoku','49 Comparison Sudoku','50 Arukone','51 Battleships','52 Binary Puzzle','53 Chiiki','54 Dampfross','55 Dominosteine','56 Endview','57 Galaxien','58 Hidoku','59 Kakuro','60 Kendoku','61 Knossos','62 Kuhweide','63 Loopy','64 Pfeile','65 Rohre','66 Shikaku','67 Slitherlink','68 Squaring','69 Squiggly','70 Sterne'];
+const TOOLS=[{href:'cube-solver/',icon:'🧊',title:'Cube Solver',desc:'3D puzzle solver: cubes, Megaminx, Pyraminx and more'}];
+
+const $=id=>document.getElementById(id);
+const el=(tag,attrs={},html)=>{const e=document.createElement(tag);for(const k in attrs)e.setAttribute(k,attrs[k]);if(html!=null)e.innerHTML=html;return e};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const GH='<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.33c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.06-.49.06-.49.8.06 1.23.83 1.23.83.71 1.22 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.2c0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>';
+
+function renderProfile(){
+  document.title=PROFILE.name+' – Portfolio, Games & Puzzles';
+  $('role').textContent=PROFILE.role;
+  $('name').textContent=PROFILE.name;
+  $('bio').textContent=PROFILE.bio;
+  $('links').innerHTML=
+    `<a class="btn pri" href="${PROFILE.github}" target="_blank" rel="noopener">${GH} GitHub: @${esc(PROFILE.githubUser)}</a>`+
+    `<a class="btn" href="#demos">View demos</a><a class="btn" href="#games">Play games</a>`;
+  $('stats').innerHTML=
+    `<span><b>${DEMOS.length}</b> portfolio demos</span><span><b>${GAMES.length}</b> games</span><span><b>${TOOLS.length}</b> puzzle tool${TOOLS.length>1?'s':''}</span>`+
+    `<span><b>${PROFILE.since}–${new Date().getFullYear()}</b> career span</span>`;
+  $('nav').innerHTML=[['#demos','Demos'],['#games','Games'],['#puzzles','Puzzles']].map(([h,t])=>`<a href="${h}">${t}</a>`).join('')+
+    `<span class="sp"></span><a href="${PROFILE.github}" target="_blank" rel="noopener">GitHub</a><button id="theme" type="button" aria-label="Toggle theme">◐ Theme</button>`;
+  $('foot').innerHTML=`<span>${esc(PROFILE.name).toUpperCase()} · UNITY / C# · CAIRO, EGYPT</span><span>© ${new Date().getFullYear()} · <a href="${PROFILE.github}" target="_blank" rel="noopener">github.com/${esc(PROFILE.githubUser)}</a></span>`;
+}
+function renderDemos(){
+  $('demoGrid').innerHTML=DEMOS.map(d=>`<a class="card" href="demos/${d.file}.html"><div class="co">${esc(d.co)}</div><div class="role">${esc(d.title)}</div><div class="years">${esc(d.years)}</div><div class="reading"><div class="num">${esc(d.num)}</div><div class="lab">${esc(d.lab)}</div></div><div class="go">Run demo →</div></a>`).join('');
+}
+function gameInfo(folder){const m=folder.match(/^(\d+)\s+(.*)$/);return{folder,num:m?m[1]:'',title:m?m[2]:folder}}
+const GAME_LIST=GAMES.map(gameInfo);
+function renderGames(filter=''){
+  const f=filter.trim().toLowerCase();
+  const list=GAME_LIST.filter(g=>!f||g.title.toLowerCase().includes(f)||g.num===f);
+  $('gamesSub').textContent=f?`${list.length} of ${GAME_LIST.length} games`:`${GAME_LIST.length} classic games — Tetris, Snake, Chess, Sudoku and many more.`;
+  $('gameGrid').innerHTML=list.length?list.map(g=>`<a class="card game" href="games/${encodeURIComponent(g.folder)}/"><div class="n">#${esc(g.num)}</div><div class="t">${esc(g.title)}</div></a>`).join(''):'<div class="empty">No games match.</div>';
+}
+function renderTools(){
+  $('toolGrid').innerHTML=TOOLS.map(t=>`<a class="card" href="${t.href}"><div class="role">${t.icon} ${esc(t.title)}</div><div class="lab">${esc(t.desc)}</div></a>`).join('');
+}
+function initTheme(){
+  try{const s=localStorage.getItem('theme');if(s)document.documentElement.dataset.theme=s}catch(e){}
+  $('theme').onclick=()=>{const r=document.documentElement;const dark=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;const n=dark?'light':'dark';r.dataset.theme=n;try{localStorage.setItem('theme',n)}catch(e){}};
+}
+renderProfile();renderDemos();renderGames();renderTools();initTheme();
+$('q').addEventListener('input',e=>renderGames(e.target.value));
+</script>
+</body>
+</html>

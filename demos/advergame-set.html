@@ -1,0 +1,282 @@
+<title>Advergame Set</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#E7E4DA; --panel:#F4F2EA; --panel-2:#ECE9DF; --ink:#1E2226; --ink-dim:#5C6169;
+    --line:#CFCBBE; --accent:#A85A16; --accent-ink:#7A400E; --accent-soft:#E8D4BC;
+    --teal:#2E7A73; --teal-soft:#D9E7E4; --bad:#B5482F;
+    --font-display:'Big Shoulders Display',Impact,'Arial Narrow',sans-serif;
+    --font-body:'IBM Plex Sans',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,'Courier New',monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#14181C; --panel:#1B2126; --panel-2:#20272D; --ink:#E7E2D6; --ink-dim:#98A0A6;
+      --line:#323A40; --accent:#FFB454; --accent-ink:#FFB454; --accent-soft:#3A3220;
+      --teal:#7FC7C0; --teal-soft:#1D2E2C; --bad:#E2836C;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14181C; --panel:#1B2126; --panel-2:#20272D; --ink:#E7E2D6; --ink-dim:#98A0A6;
+    --line:#323A40; --accent:#FFB454; --accent-ink:#FFB454; --accent-soft:#3A3220;
+    --teal:#7FC7C0; --teal-soft:#1D2E2C; --bad:#E2836C;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body);}
+  .wrap{max-width:1000px;margin:0 auto;padding:40px 24px 80px;}
+  .eyebrow{font-family:var(--font-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--teal); display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+  .eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--teal);display:inline-block;}
+  h1{font-family:var(--font-display); font-weight:800; font-size:clamp(40px,7vw,72px); line-height:0.92; margin:0 0 14px; text-transform:uppercase; text-wrap:balance;}
+  .dek{max-width:660px; font-size:15.5px; line-height:1.65; color:var(--ink-dim); margin:0 0 6px;}
+  .dek strong{color:var(--ink); font-weight:600;}
+  .source{font-family:var(--font-mono); font-size:11.5px; color:var(--ink-dim); margin:14px 0 30px;}
+
+  .cabinet{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:24px;}
+  @media (max-width:560px){ .cabinet{grid-template-columns:1fr;} }
+  .cab-card{
+    text-align:left; background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:18px 20px;
+    cursor:pointer; color:inherit;
+  }
+  .cab-card.active{border-color:var(--accent);}
+  .cab-card .tag{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-dim);}
+  .cab-card .name{font-family:var(--font-display); font-size:24px; font-weight:700; text-transform:uppercase; margin:2px 0 6px;}
+  .cab-card p{margin:0; font-size:12.5px; color:var(--ink-dim); line-height:1.5;}
+
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:20px;}
+  .hud{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; font-family:var(--font-mono); font-size:13px;}
+  .hud .metric{color:var(--ink-dim);}
+  .hud .metric b{color:var(--accent-ink); font-variant-numeric:tabular-nums;}
+  canvas#game{display:block; width:100%; height:420px; border-radius:8px; background:var(--panel-2); touch-action:none;}
+  .instr{font-family:var(--font-mono); font-size:11px; color:var(--ink-dim); margin-top:10px;}
+
+  .quiz-wrap{display:flex; flex-direction:column; align-items:center; justify-content:center; height:420px; background:var(--panel-2); border-radius:8px; padding:20px; text-align:center;}
+  .quiz-q{font-family:var(--font-display); font-size:28px; font-weight:700; margin-bottom:24px; text-wrap:balance;}
+  .quiz-opts{display:grid; grid-template-columns:1fr 1fr; gap:10px; width:100%; max-width:420px;}
+  .quiz-opts button{
+    font-family:var(--font-body); font-size:14px; padding:14px 10px; border-radius:8px; border:1px solid var(--line);
+    background:var(--panel); color:var(--ink); cursor:pointer;
+  }
+  .quiz-opts button.correct{background:var(--teal-soft); border-color:var(--teal); color:var(--teal);}
+  .quiz-opts button.wrong{background:#F0D9D1; border-color:var(--bad); color:var(--bad);}
+
+  .btn{font-family:var(--font-mono); font-size:12px; padding:10px 18px; border-radius:7px; border:1px solid var(--accent); background:var(--accent); color:#fff; cursor:pointer; margin-top:14px;}
+  .overlay{position:relative;}
+  .over-msg{
+    position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:rgba(0,0,0,0.0); gap:8px;
+  }
+
+  footer{margin-top:56px; padding-top:20px; border-top:1px solid var(--line); font-family:var(--font-mono); font-size:11.5px; color:var(--ink-dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+  footer a{color:var(--ink-dim); text-decoration:none; border-bottom:1px dotted var(--ink-dim);}
+  footer a:hover{color:var(--accent-ink); border-color:var(--accent-ink);}
+
+  .video-panel{margin-top:20px; text-align:left;}
+  .video-panel h2{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-dim); margin:0 0 14px;}
+  .video-frame{position:relative; width:100%; aspect-ratio:16/9; border-radius:8px; overflow:hidden; background:var(--panel-2); border:1px solid var(--line);}
+  .video-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .video-note{font-family:var(--font-mono); font-size:11px; color:var(--ink-dim); margin-top:10px; line-height:1.5;}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Freelancer.com &middot; Contract Work &middot; 2013&ndash;2016</div>
+  <h1>Advergame Set</h1>
+  <p class="dek">Three years of freelance Unity work for international clients broke down into two recurring briefs: <strong>promotional advergames</strong> and <strong>educational mini-games</strong>. Here's one small playable of each.</p>
+  <p class="source">MODEL &middot; original mini-games built for this page, not the original client deliverables.</p>
+
+  <div class="cabinet" id="cabinet">
+    <button class="cab-card active" data-game="catch">
+      <div class="tag">Advergame</div>
+      <div class="name">Catch the Brand</div>
+      <p>Move the paddle to catch falling marks before they hit the floor. Classic promotional-game mechanic.</p>
+    </button>
+    <button class="cab-card" data-game="quiz">
+      <div class="tag">Educational</div>
+      <div class="name">Quick Match</div>
+      <p>Fast-fire multiple choice rounds against the clock — the shape of a typical educational mini-game.</p>
+    </button>
+  </div>
+
+  <div class="panel">
+    <div class="hud">
+      <span class="metric">SCORE <b id="score">0</b></span>
+      <span class="metric" id="hud-extra">STREAK <b id="streak">0</b></span>
+      <span class="metric">TIME <b id="time">30</b>s</span>
+    </div>
+    <div class="overlay">
+      <canvas id="game" width="900" height="500"></canvas>
+      <div class="quiz-wrap" id="quiz-wrap" style="display:none;">
+        <div class="quiz-q" id="quiz-q"></div>
+        <div class="quiz-opts" id="quiz-opts"></div>
+      </div>
+    </div>
+    <div class="instr" id="instr">Move your mouse over the play field to steer the paddle.</div>
+    <button class="btn" id="start-btn">Start</button>
+  </div>
+
+  <div class="panel video-panel">
+    <h2>Demo Video</h2>
+    <div class="video-frame">
+      <iframe src="https://drive.google.com/file/d/VIDEO_8_DRIVE_ID/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="video-note">Video #8 &mdash; swap VIDEO_8_DRIVE_ID for this project's Google Drive file ID (share the file as "Anyone with the link &rarr; Viewer").</div>
+  </div>
+
+  <footer>
+    <span>PROOF-OF-CONCEPT &middot; SHERIF HOSSAM</span>
+    <a href="../index.html#demos">&larr; Back to Portfolio</a>
+  </footer>
+</div>
+
+<script>
+const canvas = document.getElementById('game');
+const ctx = canvas.getContext('2d');
+const scoreEl = document.getElementById('score');
+const streakEl = document.getElementById('streak');
+const timeEl = document.getElementById('time');
+const hudExtra = document.getElementById('hud-extra');
+const instr = document.getElementById('instr');
+const startBtn = document.getElementById('start-btn');
+const quizWrap = document.getElementById('quiz-wrap');
+
+let currentGame = 'catch';
+let running = false;
+let score = 0, streak = 0, timeLeft = 30;
+let gameTimer = null;
+
+document.getElementById('cabinet').addEventListener('click', e => {
+  const btn = e.target.closest('.cab-card'); if(!btn) return;
+  [...document.querySelectorAll('.cab-card')].forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentGame = btn.dataset.game;
+  stopGame();
+  if(currentGame === 'catch'){
+    canvas.style.display='block'; quizWrap.style.display='none';
+    instr.textContent = 'Move your mouse over the play field to steer the paddle.';
+    lastT = null;
+    requestAnimationFrame(tick);
+  } else {
+    canvas.style.display='none'; quizWrap.style.display='flex';
+    instr.textContent = 'Pick the correct answer before the next one appears.';
+  }
+  resetHud();
+});
+
+function resetHud(){
+  score=0; streak=0; timeLeft = currentGame==='catch' ? 30 : 45;
+  scoreEl.textContent=0; streakEl.textContent=0; timeEl.textContent=timeLeft;
+}
+
+function stopGame(){
+  running = false;
+  clearInterval(gameTimer);
+  startBtn.textContent = 'Start';
+}
+
+startBtn.addEventListener('click', () => {
+  if(running){ stopGame(); resetHud(); return; }
+  resetHud();
+  running = true;
+  startBtn.textContent = 'Stop';
+  gameTimer = setInterval(() => {
+    timeLeft--; timeEl.textContent = Math.max(0,timeLeft);
+    if(timeLeft <= 0){ stopGame(); }
+  }, 1000);
+  if(currentGame === 'catch') startCatch(); else startQuiz();
+});
+
+const COLORS = ['#A85A16','#2E7A73','#4E6FA8','#B5482F','#8A6DAB'];
+let paddleX = 450, drops = [];
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  paddleX = (e.clientX - r.left) * (canvas.width/r.width);
+});
+
+function startCatch(){
+  drops = [];
+}
+function spawnDrop(){
+  drops.push({x: 40+Math.random()*(canvas.width-80), y:-20, r:16, c: COLORS[Math.floor(Math.random()*COLORS.length)], speed: 2.2+Math.random()*2});
+}
+let spawnAcc = 0;
+function catchLoop(dt){
+  const css = getComputedStyle(document.documentElement);
+  const panel2 = css.getPropertyValue('--panel-2').trim();
+  const ink = css.getPropertyValue('--ink').trim();
+  const accent = css.getPropertyValue('--accent').trim();
+
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = panel2; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  if(running){
+    spawnAcc += dt;
+    if(spawnAcc > 650){ spawnDrop(); spawnAcc = 0; }
+    drops.forEach(d => d.y += d.speed*(dt/16));
+    const paddleY = canvas.height-30, paddleW=90, paddleH=14;
+    drops = drops.filter(d => {
+      if(d.y > paddleY-14 && d.y < paddleY+paddleH && Math.abs(d.x-paddleX) < paddleW/2+d.r){
+        score++; streak++; scoreEl.textContent=score; streakEl.textContent=streak;
+        return false;
+      }
+      if(d.y > canvas.height+20){ streak=0; streakEl.textContent=0; return false; }
+      return true;
+    });
+    ctx.fillStyle = ink;
+    ctx.fillRect(paddleX-45, paddleY, 90, 14);
+  }
+
+  drops.forEach(d => {
+    ctx.fillStyle = d.c;
+    ctx.beginPath(); ctx.arc(d.x,d.y,d.r,0,Math.PI*2); ctx.fill();
+  });
+
+  if(currentGame === 'catch') requestAnimationFrame((t)=>tick(t));
+}
+
+let lastT = null;
+function tick(t){
+  if(currentGame !== 'catch') return;
+  const dt = lastT ? t-lastT : 16; lastT = t;
+  catchLoop(dt);
+}
+requestAnimationFrame(tick);
+
+const QUESTIONS = [
+  {q:'7 × 6 = ?', opts:['42','36','48','54'], a:'42'},
+  {q:'Capital of France?', opts:['Rome','Paris','Madrid','Berlin'], a:'Paris'},
+  {q:'9 + 15 = ?', opts:['22','24','23','25'], a:'24'},
+  {q:'Largest planet?', opts:['Earth','Mars','Jupiter','Venus'], a:'Jupiter'},
+  {q:'100 ÷ 4 = ?', opts:['20','25','30','24'], a:'25'},
+  {q:'Opposite of "ancient"?', opts:['Old','Modern','Historic','Antique'], a:'Modern'},
+  {q:'12 × 3 = ?', opts:['36','33','39','32'], a:'36'},
+  {q:'Water freezes at?', opts:['0°C','10°C','-5°C','5°C'], a:'0°C'}
+];
+let quizLock = false;
+function startQuiz(){ nextQuestion(); }
+function nextQuestion(){
+  if(!running) return;
+  quizLock = false;
+  const q = QUESTIONS[Math.floor(Math.random()*QUESTIONS.length)];
+  document.getElementById('quiz-q').textContent = q.q;
+  const opts = document.getElementById('quiz-opts');
+  const shuffled = [...q.opts].sort(()=>Math.random()-0.5);
+  opts.innerHTML = shuffled.map(o => `<button data-o="${o}">${o}</button>`).join('');
+  opts.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      if(quizLock || !running) return;
+      quizLock = true;
+      const correct = btn.dataset.o === q.a;
+      btn.classList.add(correct ? 'correct' : 'wrong');
+      if(correct){ score++; streak++; } else {
+        streak = 0;
+        opts.querySelectorAll('button').forEach(b => { if(b.dataset.o===q.a) b.classList.add('correct'); });
+      }
+      scoreEl.textContent = score; streakEl.textContent = streak;
+      setTimeout(nextQuestion, 700);
+    });
+  });
+}
+
+resetHud();
+</script>

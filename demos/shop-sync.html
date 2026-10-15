@@ -1,0 +1,296 @@
+<title>Shop Sync</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#E7E4DA; --panel:#F4F2EA; --panel-2:#ECE9DF; --ink:#1E2226; --ink-dim:#5C6169;
+    --line:#CFCBBE; --accent:#A85A16; --accent-ink:#7A400E; --accent-soft:#E8D4BC;
+    --teal:#2E7A73; --teal-soft:#D9E7E4; --you:#4E6FA8;
+    --font-display:'Big Shoulders Display',Impact,'Arial Narrow',sans-serif;
+    --font-body:'IBM Plex Sans',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,'Courier New',monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#14181C; --panel:#1B2126; --panel-2:#20272D; --ink:#E7E2D6; --ink-dim:#98A0A6;
+      --line:#323A40; --accent:#FFB454; --accent-ink:#FFB454; --accent-soft:#3A3220;
+      --teal:#7FC7C0; --teal-soft:#1D2E2C; --you:#8FAEDB;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14181C; --panel:#1B2126; --panel-2:#20272D; --ink:#E7E2D6; --ink-dim:#98A0A6;
+    --line:#323A40; --accent:#FFB454; --accent-ink:#FFB454; --accent-soft:#3A3220;
+    --teal:#7FC7C0; --teal-soft:#1D2E2C; --you:#8FAEDB;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body);}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 24px 80px;}
+  .eyebrow{font-family:var(--font-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:var(--teal); display:flex; align-items:center; gap:8px; margin-bottom:10px;}
+  .eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--teal);display:inline-block;}
+  h1{font-family:var(--font-display); font-weight:800; font-size:clamp(40px,7vw,72px); line-height:0.92; margin:0 0 14px; text-transform:uppercase; text-wrap:balance;}
+  .dek{max-width:660px; font-size:15.5px; line-height:1.65; color:var(--ink-dim); margin:0 0 6px;}
+  .dek strong{color:var(--ink); font-weight:600;}
+  .source{font-family:var(--font-mono); font-size:11.5px; color:var(--ink-dim); margin:14px 0 30px;}
+
+  .board{display:grid; grid-template-columns:1fr 300px; gap:20px;}
+  @media (max-width:840px){ .board{grid-template-columns:1fr;} }
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:20px;}
+  .panel h2{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-dim); margin:0 0 16px; padding-bottom:10px; border-bottom:1px solid var(--line);}
+
+  canvas#store{display:block; width:100%; height:440px; border-radius:8px; cursor:crosshair;}
+  .hint-line{font-family:var(--font-mono); font-size:11px; color:var(--ink-dim); margin-top:10px;}
+
+  .side{display:flex; flex-direction:column; gap:20px;}
+  .count-row{display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;}
+  .count-row .n{font-family:var(--font-display); font-size:34px; font-weight:800; color:var(--accent-ink);}
+  .btn-row{display:flex; gap:8px;}
+  .btn{flex:1; font-family:var(--font-mono); font-size:11.5px; padding:9px 6px; border-radius:7px; border:1px solid var(--line); background:var(--panel-2); color:var(--ink); cursor:pointer;}
+  .btn:hover{border-color:var(--accent);}
+
+  .cart-list{list-style:none; margin:0; padding:0; font-family:var(--font-mono); font-size:12px;}
+  .cart-list li{display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px solid var(--line);}
+  .cart-list li:last-child{border-bottom:none;}
+  .cart-empty{font-size:12px; color:var(--ink-dim); font-family:var(--font-mono);}
+
+  .log{font-family:var(--font-mono); font-size:11px; line-height:1.7; max-height:180px; overflow-y:auto; color:var(--ink-dim);}
+  .log .t{color:var(--ink-dim); opacity:.65;}
+  .log .join{color:var(--teal);}
+  .log .cart{color:var(--accent-ink);}
+
+  footer{margin-top:56px; padding-top:20px; border-top:1px solid var(--line); font-family:var(--font-mono); font-size:11.5px; color:var(--ink-dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+  footer a{color:var(--ink-dim); text-decoration:none; border-bottom:1px dotted var(--ink-dim);}
+  footer a:hover{color:var(--accent-ink); border-color:var(--accent-ink);}
+
+  .video-panel{margin-top:20px;}
+  .video-frame{position:relative; width:100%; aspect-ratio:16/9; border-radius:8px; overflow:hidden; background:var(--panel-2); border:1px solid var(--line);}
+  .video-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .video-note{font-family:var(--font-mono); font-size:11px; color:var(--ink-dim); margin-top:10px; line-height:1.5;}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">Arab Builders &middot; Simulation of City &middot; Senior Computer Engineer</div>
+  <h1>Shop Sync</h1>
+  <p class="dek">The real thing was a Node.js server pushing socket updates so every shopper saw everyone else move and buy in the same 3D world, live. This is the sync loop, flattened to 2D — click the floor to walk your own avatar in among the simulated ones.</p>
+  <p class="source">MODEL &middot; a client-side stand-in for the socket-synced multiplayer loop, single browser tab.</p>
+
+  <div class="board">
+    <div class="panel">
+      <h2>Store Floor &mdash; click to walk</h2>
+      <canvas id="store" width="1000" height="640"></canvas>
+      <div class="hint-line">Blue dot is you. Walk near a shelf to pick something up.</div>
+    </div>
+
+    <div class="side">
+      <div class="panel">
+        <h2>Session</h2>
+        <div class="count-row"><span>Connected</span><span class="n" id="conn-count">4</span></div>
+        <div class="btn-row">
+          <button class="btn" id="add-shopper">+ Add shopper</button>
+          <button class="btn" id="rm-shopper">&minus; Remove</button>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Your Cart</h2>
+        <ul class="cart-list" id="cart-list"></ul>
+      </div>
+
+      <div class="panel">
+        <h2>Event Log</h2>
+        <div class="log" id="log"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel video-panel">
+    <h2>Demo Video</h2>
+    <div class="video-frame">
+      <iframe src="https://drive.google.com/file/d/12rWy08B34LPakhErQKjCInUqQZr_tiu0/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="video-note">Video #6 &mdash; Shop Sync demo (Google Drive).</div>
+  </div>
+
+  <footer>
+    <span>PROOF-OF-CONCEPT &middot; SHERIF HOSSAM</span>
+    <a href="../index.html#demos">&larr; Back to Portfolio</a>
+  </footer>
+</div>
+
+<script>
+const canvas = document.getElementById('store');
+const ctx = canvas.getContext('2d');
+const W = canvas.width, H = canvas.height;
+
+const SHELVES = [
+  {name:'Electronics', x:60, y:60, w:220, h:110},
+  {name:'Apparel', x:720, y:60, w:220, h:110},
+  {name:'Home Goods', x:60, y:460, w:220, h:110},
+  {name:'Toys', x:720, y:460, w:220, h:110}
+];
+const EXIT = {x:W/2-70, y:H/2-40, w:140, h:80};
+const NAMES = ['Mona','Omar','Lina','Karim','Sara','Adam','Nour','Yara','Hana','Tarek'];
+
+let targetCount = 4;
+let bots = [];
+let botId = 0;
+let you = {x:W/2, y:H/2+150, tx:W/2, ty:H/2+150, cart:{}, cooldown:0};
+
+function frontOf(shelf){
+  return {x: shelf.x + shelf.w/2, y: shelf.y < H/2 ? shelf.y + shelf.h + 30 : shelf.y - 30};
+}
+
+function spawnBot(){
+  const edge = Math.random() < 0.5 ? {x: Math.random()*W, y: EXIT.y+EXIT.h/2} : {x: EXIT.x+EXIT.w/2, y: EXIT.y+EXIT.h/2};
+  const name = NAMES[Math.floor(Math.random()*NAMES.length)] + '_' + (botId%100);
+  const bot = {
+    id: botId++, name, x: EXIT.x+EXIT.w/2, y: EXIT.y+EXIT.h/2,
+    state:'toShelf', shelf: SHELVES[Math.floor(Math.random()*SHELVES.length)],
+    pauseT:0, speed: 0.9 + Math.random()*0.6
+  };
+  bots.push(bot);
+  log(`<span class="join">${bot.name} joined</span>`);
+}
+
+function removeBot(){
+  if(bots.length === 0) return;
+  const bot = bots[Math.floor(Math.random()*bots.length)];
+  bots = bots.filter(b => b !== bot);
+  log(`${bot.name} disconnected`);
+}
+
+function log(html){
+  const el = document.getElementById('log');
+  const time = new Date().toLocaleTimeString('en-US',{hour12:false});
+  const line = document.createElement('div');
+  line.innerHTML = `<span class="t">${time}</span> ${html}`;
+  el.appendChild(line);
+  el.scrollTop = el.scrollHeight;
+  while(el.children.length > 40) el.removeChild(el.firstChild);
+}
+
+function stepTo(entity, tx, ty, speed){
+  const dx = tx-entity.x, dy = ty-entity.y;
+  const dist = Math.hypot(dx,dy);
+  if(dist < speed){ entity.x = tx; entity.y = ty; return true; }
+  entity.x += dx/dist*speed; entity.y += dy/dist*speed;
+  return false;
+}
+
+function updateBots(){
+  bots.forEach(bot => {
+    if(bot.state === 'toShelf'){
+      const f = frontOf(bot.shelf);
+      if(stepTo(bot, f.x, f.y, bot.speed)){ bot.state='shopping'; bot.pauseT=60; }
+    } else if(bot.state === 'shopping'){
+      bot.pauseT--;
+      if(bot.pauseT <= 0){
+        bot.cartAdded = true;
+        log(`${bot.name} added <span class="cart">${bot.shelf.name}</span> to cart`);
+        bot.state = 'toExit';
+      }
+    } else if(bot.state === 'toExit'){
+      if(stepTo(bot, EXIT.x+EXIT.w/2, EXIT.y+EXIT.h/2, bot.speed)) bot.state='leaving';
+    }
+  });
+  bots = bots.filter(b => b.state !== 'leaving' || (log(`${b.name} left the store`), false));
+
+  while(bots.length < targetCount) spawnBot();
+  while(bots.length > targetCount) bots.pop();
+
+  document.getElementById('conn-count').textContent = bots.length + 1;
+}
+
+function updateYou(){
+  if(you.cooldown > 0) you.cooldown--;
+  stepTo(you, you.tx, you.ty, 3.2);
+  SHELVES.forEach(shelf => {
+    const f = frontOf(shelf);
+    if(Math.hypot(you.x-f.x, you.y-f.y) < 34 && you.cooldown === 0){
+      you.cart[shelf.name] = (you.cart[shelf.name]||0) + 1;
+      you.cooldown = 90;
+      log(`<span class="cart">You added ${shelf.name} to cart</span>`);
+      renderCart();
+    }
+  });
+}
+
+function renderCart(){
+  const el = document.getElementById('cart-list');
+  const entries = Object.entries(you.cart);
+  el.innerHTML = entries.length
+    ? entries.map(([k,v]) => `<li><span>${k}</span><span>&times;${v}</span></li>`).join('')
+    : '<div class="cart-empty">Cart is empty — walk up to a shelf.</div>';
+}
+
+function draw(){
+  const css = getComputedStyle(document.documentElement);
+  const panel2 = css.getPropertyValue('--panel-2').trim();
+  const line = css.getPropertyValue('--line').trim();
+  const ink = css.getPropertyValue('--ink').trim();
+  const inkDim = css.getPropertyValue('--ink-dim').trim();
+  const accent = css.getPropertyValue('--accent').trim();
+  const teal = css.getPropertyValue('--teal').trim();
+  const you_c = css.getPropertyValue('--you').trim();
+
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = panel2; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle = line;
+  for(let x=0;x<W;x+=40){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for(let y=0;y<H;y+=40){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+
+  SHELVES.forEach(s => {
+    ctx.fillStyle = ink; ctx.globalAlpha = 0.9;
+    ctx.fillRect(s.x, s.y, s.w, s.h);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = panel2;
+    ctx.font = '700 14px "Big Shoulders Display", sans-serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(s.name.toUpperCase(), s.x+s.w/2, s.y+s.h/2);
+  });
+
+  ctx.strokeStyle = teal; ctx.setLineDash([6,4]); ctx.lineWidth = 2;
+  ctx.strokeRect(EXIT.x, EXIT.y, EXIT.w, EXIT.h);
+  ctx.setLineDash([]);
+  ctx.fillStyle = inkDim; ctx.font = '600 11px "IBM Plex Mono", monospace';
+  ctx.fillText('EXIT', EXIT.x+EXIT.w/2, EXIT.y+EXIT.h/2);
+
+  bots.forEach(b => {
+    ctx.fillStyle = accent;
+    ctx.beginPath(); ctx.arc(b.x, b.y, 9, 0, Math.PI*2); ctx.fill();
+    if(b.state === 'shopping'){
+      ctx.strokeStyle = accent; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.arc(b.x, b.y, 14 + Math.sin(performance.now()/150)*2, 0, Math.PI*2); ctx.stroke();
+    }
+    ctx.fillStyle = ink; ctx.font = '500 10px "IBM Plex Mono", monospace'; ctx.textAlign='center';
+    ctx.fillText(b.name, b.x, b.y-16);
+  });
+
+  ctx.fillStyle = you_c;
+  ctx.beginPath(); ctx.arc(you.x, you.y, 10, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = panel2; ctx.lineWidth = 2; ctx.stroke();
+  ctx.fillStyle = ink; ctx.font = '700 11px "IBM Plex Mono", monospace';
+  ctx.fillText('YOU', you.x, you.y-18);
+}
+
+canvas.addEventListener('click', e => {
+  const rect = canvas.getBoundingClientRect();
+  const sx = (e.clientX-rect.left) * (W/rect.width);
+  const sy = (e.clientY-rect.top) * (H/rect.height);
+  you.tx = sx; you.ty = sy;
+});
+
+document.getElementById('add-shopper').addEventListener('click', () => { targetCount = Math.min(9, targetCount+1); });
+document.getElementById('rm-shopper').addEventListener('click', () => { targetCount = Math.max(0, targetCount-1); });
+
+function loop(){
+  updateBots();
+  updateYou();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+for(let i=0;i<targetCount;i++) spawnBot();
+renderCart();
+loop();
+</script>

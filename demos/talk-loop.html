@@ -1,0 +1,309 @@
+<title>Talk Loop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#E7E4DA; --panel:#F4F2EA; --panel-2:#ECE9DF; --ink:#1E2226; --ink-dim:#5C6169;
+    --line:#CFCBBE; --accent:#A85A16; --accent-ink:#7A400E; --accent-soft:#E8D4BC;
+    --teal:#2E7A73; --teal-soft:#D9E7E4; --bad:#B5482F;
+    --font-display:'Big Shoulders Display',Impact,'Arial Narrow',sans-serif;
+    --font-body:'IBM Plex Sans',system-ui,sans-serif;
+    --font-mono:'IBM Plex Mono',ui-monospace,'Courier New',monospace;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#14181C; --panel:#1B2126; --panel-2:#20272D; --ink:#E7E2D6; --ink-dim:#98A0A6;
+      --line:#323A40; --accent:#FFB454; --accent-ink:#FFB454; --accent-soft:#3A3220;
+      --teal:#7FC7C0; --teal-soft:#1D2E2C; --bad:#E2836C;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#14181C; --panel:#1B2126; --panel-2:#20272D; --ink:#E7E2D6; --ink-dim:#98A0A6;
+    --line:#323A40; --accent:#FFB454; --accent-ink:#FFB454; --accent-soft:#3A3220;
+    --teal:#7FC7C0; --teal-soft:#1D2E2C; --bad:#E2836C;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0; background:var(--bg); color:var(--ink); font-family:var(--font-body);}
+  .wrap{max-width:1080px;margin:0 auto;padding:40px 24px 80px;}
+  .eyebrow{
+    font-family:var(--font-mono); font-size:12px; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--teal); display:flex; align-items:center; gap:8px; margin-bottom:10px;
+  }
+  .eyebrow::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--teal);display:inline-block;}
+  h1{font-family:var(--font-display); font-weight:800; font-size:clamp(40px,7vw,72px); line-height:0.92; margin:0 0 14px; text-transform:uppercase; text-wrap:balance;}
+  .dek{max-width:660px; font-size:15.5px; line-height:1.65; color:var(--ink-dim); margin:0 0 6px;}
+  .dek strong{color:var(--ink); font-weight:600;}
+  .source{font-family:var(--font-mono); font-size:11.5px; color:var(--ink-dim); margin:14px 0 36px;}
+
+  .board{display:grid; grid-template-columns:280px 1fr; gap:20px;}
+  @media (max-width:800px){ .board{grid-template-columns:1fr;} }
+  .panel{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:20px;}
+  .panel h2{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:.1em; color:var(--ink-dim); margin:0 0 16px; padding-bottom:10px; border-bottom:1px solid var(--line);}
+
+  .phrase-list{display:flex; flex-direction:column; gap:8px; margin-bottom:16px;}
+  .phrase-list button{
+    text-align:left; font-family:var(--font-body); font-size:12.5px; background:var(--panel-2); color:var(--ink);
+    border:1px solid var(--line); border-radius:7px; padding:9px 12px; cursor:pointer;
+  }
+  .phrase-list button:hover{border-color:var(--accent);}
+  .say-row{display:flex; gap:8px;}
+  .say-row input{
+    flex:1; font-family:var(--font-body); font-size:13px; padding:10px 12px; border-radius:7px;
+    border:1px solid var(--line); background:var(--panel-2); color:var(--ink);
+  }
+  .btn{font-family:var(--font-mono); font-size:12px; padding:10px 16px; border-radius:7px; border:1px solid var(--accent); background:var(--accent); color:#fff; cursor:pointer;}
+  .btn:disabled{opacity:.5; cursor:default;}
+
+  .pipeline{display:flex; justify-content:space-between; gap:8px; margin-bottom:20px;}
+  .stage{flex:1; text-align:center; padding:14px 6px; border-radius:8px; border:1px solid var(--line); background:var(--panel-2); position:relative;}
+  .stage .ic{font-family:var(--font-display); font-size:22px; font-weight:800; color:var(--ink-dim);}
+  .stage .lb{font-family:var(--font-mono); font-size:10px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-dim); margin-top:4px;}
+  .stage.live{border-color:var(--accent); background:var(--accent-soft);}
+  .stage.live .ic, .stage.live .lb{color:var(--accent-ink);}
+  .stage .lat{font-family:var(--font-mono); font-size:9.5px; color:var(--ink-dim); margin-top:2px; min-height:12px;}
+
+  .stage-row{display:flex; flex-direction:column; gap:20px;}
+  .avatar-panel{display:flex; gap:24px; align-items:center; flex-wrap:wrap;}
+  canvas#face{border-radius:8px; background:var(--panel-2); flex:none;}
+  .wave{flex:1; min-width:180px;}
+  .wave canvas{width:100%; height:60px; border-radius:6px; background:var(--panel-2); display:block;}
+  .state-pill{display:inline-block; margin-top:10px; font-family:var(--font-mono); font-size:11px; padding:3px 10px; border-radius:10px; background:var(--panel-2); border:1px solid var(--line); color:var(--ink-dim);}
+  .state-pill.speaking{background:var(--teal-soft); color:var(--teal); border-color:var(--teal);}
+
+  .transcript{display:flex; flex-direction:column; gap:10px; min-height:70px;}
+  .line{font-size:13.5px; line-height:1.6;}
+  .line .who{font-family:var(--font-mono); font-size:10.5px; text-transform:uppercase; letter-spacing:.08em; color:var(--ink-dim); margin-right:8px;}
+  .line.user .who{color:var(--accent-ink);}
+  .line.bot .who{color:var(--teal);}
+  .word{transition:color .1s ease;}
+  .word.spoken{color:var(--teal);}
+
+  footer{margin-top:56px; padding-top:20px; border-top:1px solid var(--line); font-family:var(--font-mono); font-size:11.5px; color:var(--ink-dim); display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;}
+  footer a{color:var(--ink-dim); text-decoration:none; border-bottom:1px dotted var(--ink-dim);}
+  footer a:hover{color:var(--accent-ink); border-color:var(--accent-ink);}
+
+  .video-panel{margin-top:20px;}
+  .video-frame{position:relative; width:100%; aspect-ratio:16/9; border-radius:8px; overflow:hidden; background:var(--panel-2); border:1px solid var(--line);}
+  .video-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .video-note{font-family:var(--font-mono); font-size:11px; color:var(--ink-dim); margin-top:10px; line-height:1.5;}
+</style>
+
+<div class="wrap">
+  <div class="eyebrow">INTDV &middot; AI Chatbot Avatar &middot; Contract</div>
+  <h1>Talk Loop</h1>
+  <p class="dek">Speech went to text, text went to a backend, the reply came back as synthesized speech, and a rigged avatar lip-synced to it in real time. This traces that loop end to end — type a line and watch it move through each stage.</p>
+  <p class="source">MODEL &middot; visual/timing simulation of the pipeline &mdash; no real STT/TTS network calls, mouth shapes approximated from text.</p>
+
+  <div class="board">
+    <div class="panel">
+      <h2>Say Something</h2>
+      <div class="phrase-list" id="phrases"></div>
+      <div class="say-row">
+        <input type="text" id="say-input" placeholder="Type a line…" maxlength="80">
+        <button class="btn" id="send-btn">Send</button>
+      </div>
+    </div>
+
+    <div class="stage-row">
+      <div class="panel">
+        <h2>Pipeline</h2>
+        <div class="pipeline" id="pipeline"></div>
+
+        <div class="avatar-panel">
+          <canvas id="face" width="160" height="160"></canvas>
+          <div class="wave">
+            <canvas id="waveform" width="400" height="60"></canvas>
+            <div class="state-pill" id="state-pill">Idle</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h2>Transcript</h2>
+        <div class="transcript" id="transcript">
+          <div class="line" style="color:var(--ink-dim)">Waiting for input…</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel video-panel">
+    <h2>Demo Video</h2>
+    <div class="video-frame">
+      <iframe src="https://drive.google.com/file/d/VIDEO_4_DRIVE_ID/preview" allow="autoplay" allowfullscreen loading="lazy"></iframe>
+    </div>
+    <div class="video-note">Video #4 &mdash; swap VIDEO_4_DRIVE_ID for this project's Google Drive file ID (share the file as "Anyone with the link &rarr; Viewer").</div>
+  </div>
+
+  <footer>
+    <span>PROOF-OF-CONCEPT &middot; SHERIF HOSSAM</span>
+    <a href="../index.html#demos">&larr; Back to Portfolio</a>
+  </footer>
+</div>
+
+<script>
+const PHRASES = ["Hi, how can I help you today?","What's the weather like?","Tell me a joke.","What time is it?","Thanks, that's all for now."];
+const REPLIES = {
+  weather: "It looks clear and mild where you are — a good day to be outside.",
+  joke: "I tried to catch some fog earlier. Mist.",
+  time: "By my clock it's about half past whenever you asked.",
+  thanks: "Anytime — glad I could help. Talk soon.",
+  default: "Got it — I've logged that and I'm ready for the next thing."
+};
+
+const STAGES = [
+  {ic:'MIC', lb:'Capture'}, {ic:'STT', lb:'Transcribe'}, {ic:'API', lb:'Backend'}, {ic:'TTS', lb:'Synth + Lip-sync'}
+];
+
+const phraseWrap = document.getElementById('phrases');
+phraseWrap.innerHTML = PHRASES.map(p => `<button data-p="${p.replace(/"/g,'&quot;')}">${p}</button>`).join('');
+const pipelineWrap = document.getElementById('pipeline');
+pipelineWrap.innerHTML = STAGES.map((s,i) => `<div class="stage" data-i="${i}"><div class="ic">${s.ic}</div><div class="lb">${s.lb}</div><div class="lat"></div></div>`).join('');
+
+const input = document.getElementById('say-input');
+const sendBtn = document.getElementById('send-btn');
+const transcript = document.getElementById('transcript');
+const statePill = document.getElementById('state-pill');
+const faceCanvas = document.getElementById('face');
+const fctx = faceCanvas.getContext('2d');
+const waveCanvas = document.getElementById('waveform');
+const wctx = waveCanvas.getContext('2d');
+
+let busy = false;
+let mouthOpen = 0, blinkT = 0, talking = false;
+let waveOffset = 0;
+
+function pickReply(text){
+  const t = text.toLowerCase();
+  if(t.includes('weather')) return REPLIES.weather;
+  if(t.includes('joke')) return REPLIES.joke;
+  if(t.includes('time')) return REPLIES.time;
+  if(t.includes('thanks') || t.includes('thank you')) return REPLIES.thanks;
+  return REPLIES.default;
+}
+
+function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+function setStageActive(i){
+  [...pipelineWrap.children].forEach((el,idx) => el.classList.toggle('live', idx===i));
+}
+function setLatency(i, ms){
+  pipelineWrap.children[i].querySelector('.lat').textContent = ms + 'ms';
+}
+
+function addLine(who, text){
+  const words = text.split(' ').map((w,i) => `<span class="word" data-w="${i}">${w}</span>`).join(' ');
+  const div = document.createElement('div');
+  div.className = 'line ' + who;
+  div.innerHTML = `<span class="who">${who === 'user' ? 'You' : 'Avatar'}</span><span class="txt">${words}</span>`;
+  if(transcript.children.length === 1 && transcript.children[0].style.color){ transcript.innerHTML = ''; }
+  transcript.appendChild(div);
+  transcript.scrollTop = transcript.scrollHeight;
+  return div;
+}
+
+async function speakLine(div, text){
+  talking = true;
+  statePill.textContent = 'Speaking'; statePill.classList.add('speaking');
+  const words = [...div.querySelectorAll('.word')];
+  for(const w of words){
+    w.classList.add('spoken');
+    const dur = 90 + w.textContent.length * 28;
+    await sleep(dur);
+  }
+  talking = false;
+  statePill.textContent = 'Idle'; statePill.classList.remove('speaking');
+}
+
+async function runPipeline(text){
+  if(busy) return;
+  busy = true; sendBtn.disabled = true;
+
+  const userDiv = addLine('user', text);
+  userDiv.querySelectorAll('.word').forEach(w => w.classList.add('spoken'));
+
+  setStageActive(0); await sleep(220); setLatency(0, 220 + text.length*4);
+  setStageActive(1); await sleep(280); setLatency(1, 280 + text.length*6);
+  setStageActive(2); await sleep(320); setLatency(2, 320);
+  const reply = pickReply(text);
+  setStageActive(3);
+  const botDiv = addLine('bot', reply);
+  await speakLine(botDiv, reply);
+  setLatency(3, 60 + reply.length*10);
+  setStageActive(-1);
+
+  busy = false; sendBtn.disabled = false;
+}
+
+phraseWrap.addEventListener('click', e => {
+  const btn = e.target.closest('button'); if(!btn) return;
+  runPipeline(btn.dataset.p);
+});
+sendBtn.addEventListener('click', () => {
+  const v = input.value.trim(); if(!v) return;
+  input.value = ''; runPipeline(v);
+});
+input.addEventListener('keydown', e => { if(e.key === 'Enter') sendBtn.click(); });
+
+function drawFace(){
+  const css = getComputedStyle(document.documentElement);
+  const ink = css.getPropertyValue('--ink').trim();
+  const panel2 = css.getPropertyValue('--panel-2').trim();
+  const accent = css.getPropertyValue('--accent').trim();
+  const w = faceCanvas.width, h = faceCanvas.height;
+  fctx.clearRect(0,0,w,h);
+  fctx.fillStyle = panel2; fctx.fillRect(0,0,w,h);
+
+  const cx = w/2, cy = h/2 - 6, r = 52;
+  fctx.strokeStyle = ink; fctx.lineWidth = 3;
+  fctx.beginPath(); fctx.arc(cx,cy,r,0,Math.PI*2); fctx.stroke();
+
+  blinkT += 0.05;
+  const blink = (Math.sin(blinkT*0.6) > 0.985) ? 0.15 : 1;
+  [-1,1].forEach(s => {
+    fctx.save();
+    fctx.translate(cx + s*20, cy - 8);
+    fctx.scale(1, blink);
+    fctx.fillStyle = ink;
+    fctx.beginPath(); fctx.arc(0,0,5.5,0,Math.PI*2); fctx.fill();
+    fctx.restore();
+  });
+
+  if(talking) mouthOpen = 0.35 + Math.abs(Math.sin(performance.now()/80)) * 0.65;
+  else mouthOpen += (0.08 - mouthOpen) * 0.15;
+
+  fctx.strokeStyle = accent; fctx.lineWidth = 3.5; fctx.lineCap = 'round';
+  fctx.beginPath();
+  const mw = 26, my = cy + 26;
+  fctx.moveTo(cx-mw, my);
+  fctx.quadraticCurveTo(cx, my + mouthOpen*30, cx+mw, my);
+  fctx.stroke();
+
+  requestAnimationFrame(drawFace);
+}
+
+function drawWave(){
+  const css = getComputedStyle(document.documentElement);
+  const panel2 = css.getPropertyValue('--panel-2').trim();
+  const teal = css.getPropertyValue('--teal').trim();
+  const line = css.getPropertyValue('--line').trim();
+  const w = waveCanvas.width, h = waveCanvas.height;
+  wctx.clearRect(0,0,w,h);
+  wctx.fillStyle = panel2; wctx.fillRect(0,0,w,h);
+  wctx.strokeStyle = line; wctx.beginPath(); wctx.moveTo(0,h/2); wctx.lineTo(w,h/2); wctx.stroke();
+
+  wctx.strokeStyle = teal; wctx.lineWidth = 2; wctx.beginPath();
+  waveOffset += talking ? 0.35 : 0.06;
+  for(let x=0; x<w; x+=3){
+    const amp = talking ? (8 + Math.sin(x*0.05 + waveOffset*3)*10*Math.random()) : 2;
+    const y = h/2 + Math.sin(x*0.08 + waveOffset)*amp;
+    x===0 ? wctx.moveTo(x,y) : wctx.lineTo(x,y);
+  }
+  wctx.stroke();
+  requestAnimationFrame(drawWave);
+}
+
+drawFace();
+drawWave();
+</script>
