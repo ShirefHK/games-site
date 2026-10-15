@@ -72,6 +72,25 @@
   ov.addEventListener('click',e=>{if(e.target===ov||e.target.closest('.x,.go'))close()});
   btn.onclick=open;
 
-  const mount=()=>{document.body.appendChild(ov);document.body.appendChild(btn);let s=0;try{s=localStorage.getItem(seen)}catch(e){}if(!s)open()};
+  // --- scale the game canvas to fill the window + optional true fullscreen
+  const fsBtn=document.createElement('button');fsBtn.id='hw-fs';fsBtn.type='button';fsBtn.innerHTML='<b>⛶</b> Fullscreen';
+  const css2=document.createElement('style');css2.textContent='#hw-fs{position:fixed;right:16px;bottom:60px;z-index:2147483000;display:flex;align-items:center;gap:8px;padding:9px 16px 9px 12px;border:1px solid #4f228d;border-radius:999px;background:#1a0b2e;color:#ccd6f6;font:600 13px/1 Poppins,system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 24px -6px #763cac}#hw-fs:hover{background:#251043;border-color:#a362ff}#hw-fs b{font-size:15px;font-weight:600;color:#a362ff}body.hw-full #bar{display:none}body.hw-full{padding-top:0!important}canvas.hw-fit{max-width:none!important}';
+  document.head.appendChild(css2);
+  let cv=null,last='';
+  const fit=()=>{
+    cv=cv||document.querySelector('body > canvas');if(!cv)return;
+    const bar=document.getElementById('bar'),help=document.getElementById('help');
+    const barH=bar&&bar.offsetParent?bar.offsetHeight:0,helpH=help?help.offsetHeight+8:0;
+    const availW=innerWidth-32,availH=innerHeight-barH-helpH-48;
+    const k=Math.max(.2,Math.min(availW/cv.width,availH/cv.height));
+    const w=Math.floor(cv.width*k)+'px';
+    if(w!==last||!cv.classList.contains('hw-fit')){last=w;cv.classList.add('hw-fit');cv.style.width=w;cv.style.height='auto'}
+  };
+  const toggleFs=()=>{const d=document,r=d.documentElement;
+    if(d.fullscreenElement)d.exitFullscreen();else if(r.requestFullscreen)r.requestFullscreen().catch(()=>{});};
+  fsBtn.onclick=()=>{toggleFs();fsBtn.blur()};
+  document.addEventListener('fullscreenchange',()=>{document.body.classList.toggle('hw-full',!!document.fullscreenElement);fsBtn.innerHTML=document.fullscreenElement?'<b>✕</b> Exit fullscreen':'<b>⛶</b> Fullscreen';last='';fit()});
+  addEventListener('resize',fit);setInterval(fit,500);
+  const mount=()=>{document.body.appendChild(ov);document.body.appendChild(btn);if(document.querySelector("body > canvas")){document.body.appendChild(fsBtn);fit()}let s=0;try{s=localStorage.getItem(seen)}catch(e){}if(!s)open()};
   document.body?mount():addEventListener('DOMContentLoaded',mount);
 })();

@@ -153,6 +153,8 @@ kbd{display:inline-block;min-width:24px;padding:3px 8px;text-align:center;font:6
 .puz{display:grid;grid-template-columns:minmax(220px,360px) 1fr;gap:22px;align-items:center;padding:6px}
 .puz img{width:100%;border-radius:14px;border:1px solid var(--edge);display:block;box-shadow:0 18px 44px -16px var(--accent);transition:transform .4s}.puz:hover img{transform:rotate(-1.5deg) scale(1.02)}
 .puz h3{margin:0 0 6px;font:400 24px var(--h)}.puz p{margin:0 0 14px;color:var(--dim);font-size:14px}
+#toolGrid{display:block}
+.pgal{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:18px}.ptile{position:relative;display:block;border:1px solid var(--edge);border-radius:12px;overflow:hidden;background:var(--raised);transition:transform .25s,border-color .25s,box-shadow .3s}.ptile:hover{transform:translateY(-4px) scale(1.03);border-color:var(--accent);box-shadow:0 14px 30px -12px var(--accent)}.ptile img{display:block;width:100%;aspect-ratio:6/5;object-fit:cover}.ptile span{position:absolute;left:0;right:0;bottom:0;padding:14px 8px 6px;text-align:center;font:600 11.5px var(--b);color:#fff;background:linear-gradient(transparent,rgba(8,2,18,.88))}
 @media(max-width:860px){.landing{grid-template-columns:1fr;padding-top:20px}.land-art{height:340px}.puz{grid-template-columns:1fr}}
 @media(max-width:480px){.land-art .tile{width:50%}.land-art .hint{font-size:11px;padding:8px 10px}}
 
@@ -233,8 +235,9 @@ const DEMOS=[
  {file:'advergame-set',co:'Freelancer.com · Contract Work',title:'Advergame Set',years:'May 2013 – Oct 2016',num:'3+ yrs',lab:'Educational mini-games and promotional advergames delivered for international clients.'}
 ];
 const GAMES=['01 Tetris','02 Doodle Jump','03 Arkanoid','04 Snake','05 Minesweeper','06 Fifteen-Puzzle','07 Racing (Top Down)','08 Outrun','09 Xonix','10 Bejeweled','11 NetWalk (Pipe Puzzle)','12 Mahjong Solitaire','13 Tron','14 Chess','15 Volleyball','16 Asteroids','17 Tetris Attack','18 SameGame','19 Cogs','20 SquareLogic','21 Bookworm','22 Picross','23 SpaceChem','24 Sokoban','25 2048','26 4-to-Win','27 Reversi','28 Strike5','29 Pitfall','30 Gridlock','31 Trio','32 Gridwords','33 Quadwords','34 Quintext','35 Crosstext','36 Quiz','37 Sudoku','38 Sudoku Mini','39 Sudoku Kika','40 Sudoku Extra','41 Sudoku Farb','42 Sudoku Rainbow','43 Sudoku Diagonal','44 Killer Sudoku','45 Killer Sudoku Kika','46 Killer Sudoku Farb','47 Killer Sudoku Diagonal','48 Kropki Sudoku','49 Comparison Sudoku','50 Arukone','51 Battleships','52 Binary Puzzle','53 Chiiki','54 Dampfross','55 Dominosteine','56 Endview','57 Galaxien','58 Hidoku','59 Kakuro','60 Kendoku','61 Knossos','62 Kuhweide','63 Loopy','64 Pfeile','65 Rohre','66 Shikaku','67 Slitherlink','68 Squaring','69 Squiggly','70 Sterne'];
-const TOOLS=[{href:'cube-solver/',img:'thumbs/cube-solver.svg',title:'Cube Solver',desc:'Scramble it, then watch it solve. A 3D puzzle solver for cubes, Megaminx, Pyraminx and more.'}];
+const TOOLS=[{href:'cube-solver/',img:'thumbs/cube-solver.svg',title:'Cube Solver',desc:'Scramble it, paint your real cube, then watch it solve step by step. Works for cubes from 2×2 to 7×7, Skewb, Pyraminx, Megaminx and more.'}];
 const FEATURED=[['01','Tetris','Stack and clear rows','← → move','↑ rotate'],['14','Chess','Play the computer','Drag','Space = AI move'],['05','Minesweeper','Reveal safe squares','Click','Right-click flag'],['25','2048','Merge to 2048','Arrows','R restart'],['37','Sudoku','Classic 9×9 logic','Click','1–9 / N notes'],['13','Tron','2-player light cycles','← ↑ ↓ →','W A S D']];
+const PUZZLES=[['cube-2x2','2×2×2 Cube'],['cube-solver','3×3×3 Cube'],['cube-4x4','4×4×4 Cube'],['cube-5x5','5×5×5 Cube'],['skewb','Skewb'],['pyraminx','Pyraminx'],['megaminx','Megaminx']];
 const ROT=['Explore.','Build.','Learn.','Compete.'];
 
 const $=id=>document.getElementById(id);
@@ -280,7 +283,9 @@ function renderGames(filter=''){
   $('gameGrid').innerHTML=list.length?list.map(g=>`<a class="asset game" data-log="Loading game: ${esc(g.title)}" href="games/${encodeURIComponent(g.folder)}/"><div class="shot" style="background:hsl(${hue(g.title)} 45% 32%)"><span>${esc(initials(g.title))}</span><img src="thumbs/${esc(g.num)}.jpg" alt="${esc(g.title)} screenshot" loading="lazy" onerror="this.remove()"></div><div class="t">${esc(g.title)}</div><div class="n">#${esc(g.num)}</div></a>`).join(''):'<div class="empty">No assets match the search.</div>';
 }
 function renderTools(){
-  $('toolGrid').innerHTML=TOOLS.map(t=>`<a class="puz" data-log="Loading tool: ${esc(t.title)}" href="${t.href}"><img src="${t.img}" alt="${esc(t.title)} illustration" loading="lazy"><div><h3>${esc(t.title)}</h3><p>${esc(t.desc)}</p><span class="btn pri">▶ Open solver</span></div></a>`).join('');
+  const t=TOOLS[0];
+  $('toolGrid').innerHTML=`<a class="puz" data-log="Loading tool: ${esc(t.title)}" href="${t.href}"><img src="${t.img}" alt="${esc(t.title)} illustration" loading="lazy"><div><h3>${esc(t.title)}</h3><p>${esc(t.desc)}</p><span class="btn pri">▶ Open solver</span></div></a>`+
+    '<div class="pgal">'+PUZZLES.map(([f,n])=>`<a class="ptile" data-log="Loading tool: Cube Solver (${esc(n)})" href="cube-solver/" title="Solve a ${esc(n)}"><img src="thumbs/${f}.svg" alt="${esc(n)}" loading="lazy"><span>${esc(n)}</span></a>`).join('')+'</div>';
 }
 function renderLanding(){
   const art=[['14','Chess','-4deg','8%','2%','0s'],['04','Snake','3deg','52%','10%','-2s'],['01','Tetris','2deg','4%','38%','-4s'],['25','2048','-3deg','50%','46%','-1s']];
