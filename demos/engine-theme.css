@@ -38,3 +38,40 @@ h1{font-family:var(--font-display) !important; font-weight:400 !important; text-
 button,input,select,textarea{font-family:var(--font-mono);}
 a{color:var(--accent-ink);}
 .panel,.stat,.headline-stat{background:linear-gradient(137deg,var(--panel-2),var(--panel)) !important; border-color:var(--accent-soft) !important;}
+
+/* ---- motion layer (shared with main page) ---- */
+:root{--glow:rgba(118,60,172,.4)}
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes spin{to{--ang:360deg}}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-50px) scale(1.15)}}
+@keyframes blink{50%{opacity:0}}
+@keyframes sheen{to{background-position:-200% 0}}
+.orbs{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.orbs i{position:absolute;border-radius:50%;filter:blur(70px);background:radial-gradient(circle,var(--accent-soft),transparent 70%);opacity:.5;animation:float 16s ease-in-out infinite}
+.orbs i:nth-child(1){width:420px;height:420px;left:5%;top:8%}
+.orbs i:nth-child(2){width:520px;height:520px;right:-6%;top:38%;animation-duration:22s;animation-delay:-6s}
+.orbs i:nth-child(3){width:380px;height:380px;left:25%;bottom:-8%;animation-duration:19s;animation-delay:-11s}
+.panel,.stat,.headline-stat{position:relative;border-radius:10px !important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  background:linear-gradient(137deg,color-mix(in srgb,var(--panel-2) 82%,transparent),color-mix(in srgb,var(--panel) 72%,transparent)) !important;
+  transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1),box-shadow .3s,border-color .2s}
+.panel::after,.headline-stat::after{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;opacity:.75;z-index:2;
+  background:conic-gradient(from var(--ang),transparent 0 65%,var(--accent) 82%,transparent 100%);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spin 7s linear infinite}
+.panel:hover{box-shadow:0 10px 40px -12px var(--glow)}
+.stat:hover,.headline-stat:hover{transform:translateY(-3px);border-color:var(--accent) !important}
+.panel h2{cursor:pointer;user-select:none;border-radius:9px 9px 0 0}
+.panel h2::after{content:"\25BE";float:right;color:var(--ink-dim);transition:transform .25s}
+.panel.collapsed h2::after{transform:rotate(-90deg)}
+.panel.collapsed>:not(h2){display:none}
+.panel.collapsed h2{margin-bottom:-20px !important;border-bottom:0 !important}
+.panel.rv{opacity:0;transform:translateY(32px)}
+.panel.rv.in{opacity:1;transform:none}
+.panel::before,.stat::before,.headline-stat::before{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .25s;z-index:1;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),var(--glow),transparent 70%)}
+.panel:hover::before,.stat:hover::before,.headline-stat:hover::before{opacity:.8}
+h1{background:linear-gradient(90deg,var(--ink),var(--accent),var(--ink));background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent !important;animation:sheen 6s linear infinite}
+.caret{display:inline-block;width:7px;height:1em;background:var(--teal);vertical-align:-2px;margin-left:2px;animation:blink 1s steps(1) infinite}
+button,.btn,.seg button{transition:transform .2s,box-shadow .2s,background .2s}
+button:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 5px 16px -5px var(--glow)}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}.panel.rv{opacity:1;transform:none}}
