@@ -62,7 +62,7 @@ h1{margin:0;font-family:var(--h);font-size:clamp(28px,5.5vw,46px);font-weight:40
 .tools label{font-family:var(--m);color:var(--dim);font-size:11px}
 input[type=search]{flex:1;min-width:140px;padding:5px 9px;border-radius:3px;border:1px solid var(--edge);background:var(--bg);color:var(--ink);font:12.5px var(--b)}
 input[type=search]:focus{outline:1px solid var(--accent)}
-.assets{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}
+.assets{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:8px}#gameGrid{grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px}
 .asset{display:flex;flex-direction:column;align-items:center;text-align:center;padding:8px 4px;border:1px solid transparent;border-radius:3px}
 .asset:hover{background:var(--raised);border-color:var(--accent)}
 .thumb{width:64px;height:64px;border-radius:5px;display:grid;place-items:center;font:600 22px var(--m);color:#fff;margin-bottom:6px;border:1px solid rgba(0,0,0,.4);text-shadow:0 1px 2px rgba(0,0,0,.5)}
@@ -75,6 +75,7 @@ input[type=search]:focus{outline:1px solid var(--accent)}
 .status{position:fixed;left:0;right:0;bottom:0;height:26px;background:var(--panel-h);border-top:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 12px;font:11px var(--m);color:var(--dim);z-index:10;overflow:hidden;white-space:nowrap}
 .status a{color:var(--accent)}.status .sp{flex:1}
 @media(max-width:560px){.hero{grid-template-columns:1fr}.avatar{width:64px;height:64px;font-size:24px}}
+.asset.game{padding:6px 6px 10px;align-items:stretch;text-align:left;background:linear-gradient(168deg,var(--panel-h),var(--raised));border:1px solid var(--edge);border-radius:8px}.shot{position:relative;aspect-ratio:4/3;border-radius:5px;overflow:hidden;display:grid;place-items:center;margin-bottom:8px;border:1px solid rgba(0,0,0,.4)}.shot span{font:600 30px var(--m);color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.5)}.shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .45s ease}.asset.game:hover .shot img{transform:scale(1.1)}.asset.game .t,.asset.game .n{padding:0 4px}.asset.game .t{font-size:13px}
 /* ---- motion layer ---- */
 @property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
 @keyframes spin{to{--ang:360deg}}
@@ -225,7 +226,7 @@ function renderGames(filter=''){
   const f=filter.trim().toLowerCase();
   const list=GAME_LIST.filter(g=>!f||g.title.toLowerCase().includes(f)||g.num===f);
   $('gamesSub').textContent=f?`${list.length} / ${GAME_LIST.length} assets`:`${GAME_LIST.length} assets`;
-  $('gameGrid').innerHTML=list.length?list.map(g=>`<a class="asset" data-log="Loading game: ${esc(g.title)}" href="games/${encodeURIComponent(g.folder)}/"><div class="thumb" style="background:hsl(${hue(g.title)} 45% 38%)">${esc(initials(g.title))}</div><div class="t">${esc(g.title)}</div><div class="n">#${esc(g.num)}</div></a>`).join(''):'<div class="empty">No assets match the search.</div>';
+  $('gameGrid').innerHTML=list.length?list.map(g=>`<a class="asset game" data-log="Loading game: ${esc(g.title)}" href="games/${encodeURIComponent(g.folder)}/"><div class="shot" style="background:hsl(${hue(g.title)} 45% 32%)"><span>${esc(initials(g.title))}</span><img src="thumbs/${esc(g.num)}.jpg" alt="${esc(g.title)} screenshot" loading="lazy" onerror="this.remove()"></div><div class="t">${esc(g.title)}</div><div class="n">#${esc(g.num)}</div></a>`).join(''):'<div class="empty">No assets match the search.</div>';
 }
 function renderTools(){
   $('toolGrid').innerHTML=TOOLS.map(t=>`<a class="asset" data-log="Loading tool: ${esc(t.title)}" href="${t.href}" title="${esc(t.desc)}"><div class="thumb" style="background:hsl(${hue(t.title)} 45% 38%);font-size:30px">${t.icon}</div><div class="t">${esc(t.title)}</div><div class="n">${esc(t.desc)}</div></a>`).join('');
