@@ -4,8 +4,12 @@
   const folder=decodeURIComponent(location.pathname.split('/').filter(Boolean).slice(-1)[0]||'');
   const md=window.HOWTO&&window.HOWTO[folder];
   if(!md)return;
+  try{const t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}
   const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const seen='howto:'+folder;
+  // #thumb mode: clean, chrome-free view used to capture the landing-page thumbnails
+  const THUMB=location.hash==='#thumb';
+  if(THUMB){const ts=document.createElement('style');ts.textContent='#bar,#help,#hw-btn,#hw-fs,#hw-ap,#hw,body>main>.row:first-child{display:none!important}html,body{background:#0d0518!important}body{padding:0!important}canvas{margin:0!important;box-shadow:none!important;border-radius:0!important;animation:none!important}';document.head.appendChild(ts)}
 
   // --- parse the guide markdown (title, ## sections; tables, ordered and bullet lists, paragraphs)
   const title=(md.match(/^# (.+)$/m)||[,folder])[1];
@@ -91,6 +95,40 @@
   fsBtn.onclick=()=>{toggleFs();fsBtn.blur()};
   document.addEventListener('fullscreenchange',()=>{document.body.classList.toggle('hw-full',!!document.fullscreenElement);fsBtn.innerHTML=document.fullscreenElement?'<b>✕</b> Exit fullscreen':'<b>⛶</b> Fullscreen';last='';fit()});
   addEventListener('resize',fit);setInterval(fit,500);
-  const mount=()=>{document.body.appendChild(ov);document.body.appendChild(btn);if(document.querySelector("body > canvas")){document.body.appendChild(fsBtn);fit()}let s=0;try{s=localStorage.getItem(seen)}catch(e){}if(!s)open()};
+  // --- Auto-play demo: random input drawn from this game's own controls, so the game looks alive.
+  const ctlText=rows.map(r=>r.join(' ')).join(' ');
+  const keys=[];
+  const addK=(...c)=>c.forEach(k=>keys.includes(k)||keys.push(k));
+  if(/Arrow|Arrows/.test(ctlText))addK('ArrowLeft','ArrowRight','ArrowUp','ArrowDown');
+  if(/←/.test(ctlText))addK('ArrowLeft');if(/→/.test(ctlText))addK('ArrowRight');
+  if(/↑/.test(ctlText))addK('ArrowUp');if(/↓/.test(ctlText))addK('ArrowDown');
+  if(/W A S D|WASD/.test(ctlText))addK('KeyW','KeyA','KeyS','KeyD');else if(/W A D/.test(ctlText))addK('KeyW','KeyA','KeyD');
+  if(/Space/.test(ctlText)&&!/Space[^|]*Computer plays/.test(ctlText))addK('Space');
+  const mouse=/Click|Drag/i.test(ctlText);
+  const hold=/accelerate|Gas|Thrust/i.test(ctlText)?'ArrowUp':null;
+  const restartK=rows.some(r=>r[0]==='R');
+  const canAuto=document.querySelector('body > canvas')&&(keys.length||mouse);
+  const apBtn=document.createElement('button');apBtn.id='hw-ap';apBtn.type='button';apBtn.innerHTML='<b>▶</b> Auto-play demo';
+  const css3=document.createElement('style');css3.textContent='#hw-ap{position:fixed;right:16px;bottom:104px;z-index:2147483000;display:flex;align-items:center;gap:8px;padding:9px 16px 9px 12px;border:1px solid #4f228d;border-radius:999px;background:#1a0b2e;color:#ccd6f6;font:600 13px/1 Poppins,system-ui,sans-serif;cursor:pointer;box-shadow:0 6px 24px -6px #763cac}#hw-ap:hover{background:#251043;border-color:#a362ff}#hw-ap b{font-size:13px;color:#a362ff}#hw-ap.on{border-color:#7ee0b0}#hw-ap.on b{color:#7ee0b0}';
+  document.head.appendChild(css3);
+  let ap=false,apTimer=null,lastUser=-1e9,held=false,lastR=0;
+  const kev=(type,code)=>dispatchEvent(new KeyboardEvent(type,{code,key:code.replace(/^Key|^Arrow/,''),bubbles:true,cancelable:true}));
+  const tap=code=>{kev('keydown',code);setTimeout(()=>kev('keyup',code),60+Math.random()*90)};
+  const mev=(type,x,y,t)=>(t||document.querySelector('body > canvas')).dispatchEvent(new MouseEvent(type,{clientX:x,clientY:y,bubbles:true,cancelable:true,button:0,buttons:type==='mouseup'?0:1}));
+  const step=()=>{
+    if(ov.classList.contains('open')||document.hidden||performance.now()-lastUser<6000)return;
+    if(hold&&!held){held=true;kev('keydown',hold)}
+    const c=document.querySelector('body > canvas'),r=c.getBoundingClientRect();
+    const pt=()=>[r.left+r.width*(.05+.9*Math.random()),r.top+r.height*(.05+.9*Math.random())];
+    const move=keys.filter(k=>k!==hold);
+    if(mouse&&(!move.length||Math.random()<.4)){const [x,y]=pt();mev('mousemove',x,y);mev('mousedown',x,y);if(/Drag/i.test(ctlText)){const [x2,y2]=pt();mev('mousemove',x2,y2)}mev('mouseup',x,y);mev('click',x,y)}
+    else if(move.length)tap(move[Math.floor(Math.random()*move.length)]);
+    if(restartK&&performance.now()-lastR>45000){lastR=performance.now();tap('KeyR')}
+  };
+  const setAp=on=>{ap=on;apBtn.classList.toggle('on',on);apBtn.innerHTML=on?'<b>❚❚</b> Stop auto-play':'<b>▶</b> Auto-play demo';
+    clearInterval(apTimer);if(on){lastR=performance.now();apTimer=setInterval(step,170)}else if(held){held=false;kev('keyup',hold)}};
+  apBtn.onclick=()=>{setAp(!ap);apBtn.blur()};
+  ['mousedown','keydown','touchstart'].forEach(ev=>addEventListener(ev,e=>{if(e.isTrusted&&!(e.target.closest&&e.target.closest('#hw-ap')))lastUser=performance.now()},true));
+  const mount=()=>{document.body.appendChild(ov);document.body.appendChild(btn);if(document.querySelector("body > canvas")){document.body.appendChild(fsBtn);fit();if(canAuto)document.body.appendChild(apBtn)}let s=0;try{s=localStorage.getItem(seen)}catch(e){}if(!s&&!THUMB)open()};
   document.body?mount():addEventListener('DOMContentLoaded',mount);
 })();

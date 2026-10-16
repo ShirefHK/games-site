@@ -1,0 +1,49 @@
+/* Portfolio theme for every game page (purple glow, Preahvihear / Poppins).
+   Loaded last, so it restyles the page chrome that common.js injects. */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Preahvihear&family=IBM+Plex+Mono:wght@500;600&display=swap');
+:root{--g-bg:#0d0518;--g-panel:#1a0b2e;--g-panel-h:#130428;--g-raised:#251043;--g-edge:#4f228d;--g-ink:#ccd6f6;--g-dim:#9a93b8;--g-accent:#a362ff;--g-glow:rgba(118,60,172,.4)}
+:root[data-theme=light]{--g-bg:#efe9fa;--g-panel:#f7f3fd;--g-panel-h:#e3d9f5;--g-raised:#fff;--g-edge:#cbb9ee;--g-ink:#1a0b2e;--g-dim:#5b4c80;--g-accent:#6a2fc7;--g-glow:rgba(163,98,255,.25)}
+@media(prefers-color-scheme:light){:root:not([data-theme=dark]){--g-bg:#efe9fa;--g-panel:#f7f3fd;--g-panel-h:#e3d9f5;--g-raised:#fff;--g-edge:#cbb9ee;--g-ink:#1a0b2e;--g-dim:#5b4c80;--g-accent:#6a2fc7;--g-glow:rgba(163,98,255,.25)}}
+
+html{background:var(--g-bg)}
+html body{
+  background:radial-gradient(600px 420px at 15% 5%,var(--g-glow),transparent 70%),radial-gradient(700px 500px at 90% 55%,var(--g-glow),transparent 70%),radial-gradient(600px 450px at 20% 95%,var(--g-glow),transparent 70%),var(--g-bg);
+  background-attachment:fixed;color:var(--g-ink);font-family:'Poppins',system-ui,sans-serif;
+}
+/* top bar: glass strip with gradient title and a pill link back to the portfolio */
+html body #bar,html body main>.row:first-child{
+  position:sticky;top:8px;z-index:20;box-sizing:border-box;align-items:center;padding:8px 10px 8px 18px;margin-bottom:6px;
+  border:1px solid var(--g-edge);border-radius:999px;
+  background:color-mix(in srgb,var(--g-panel-h) 82%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  box-shadow:0 10px 34px -16px var(--g-accent);
+}
+html body #bar h1,html body main h1{
+  margin:0;font:400 20px 'Preahvihear','Poppins',sans-serif;letter-spacing:-.01em;
+  background:linear-gradient(90deg,var(--g-ink),var(--g-accent),var(--g-ink));background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:gsheen 6s linear infinite;
+}
+@keyframes gsheen{to{background-position:-200% 0}}
+html body #bar a,html body main>.row:first-child a{
+  color:var(--g-ink);font:500 12.5px 'Poppins',sans-serif;padding:6px 14px;border:1px solid var(--g-edge);border-radius:999px;
+  background:var(--g-raised);transition:transform .2s,border-color .2s,box-shadow .2s;white-space:nowrap;
+}
+html body #bar a:hover,html body main>.row:first-child a:hover{border-color:var(--g-accent);transform:translateY(-1px);box-shadow:0 6px 18px -6px var(--g-glow)}
+/* the playfield: rounded, glowing frame */
+html body canvas{
+  border-radius:14px;box-shadow:0 0 0 1px var(--g-edge),0 24px 70px -22px var(--g-accent),0 0 60px -24px var(--g-glow);
+  margin-top:14px;animation:gfade .6s ease-out both;
+}
+@keyframes gfade{from{opacity:0;transform:translateY(12px) scale(.985)}}
+/* hint line under the canvas */
+html body #help{
+  margin-top:14px;padding:8px 16px;border:1px solid var(--g-edge);border-radius:999px;
+  background:color-mix(in srgb,var(--g-panel) 85%,transparent);color:var(--g-dim);font:500 12.5px 'Poppins',sans-serif;
+}
+/* Quiz page (own markup) */
+html body{--bg:var(--g-bg);--card:var(--g-panel);--line:var(--g-edge);--text:var(--g-ink);--mut:var(--g-dim);--acc:var(--g-accent)}
+html body main .card{background:linear-gradient(137deg,var(--g-panel-h),var(--g-panel));border:1px solid var(--g-edge);border-radius:14px}
+html body main button{background:var(--g-accent);color:#0d0518;font-family:'Poppins',sans-serif;border-radius:10px}
+html body main button.sec,html body main .opt{background:var(--g-raised);color:var(--g-ink);border:1px solid var(--g-edge)}
+html body main input,html body main select,html body main textarea{background:var(--g-panel-h);color:var(--g-ink);border:1px solid var(--g-edge);border-radius:8px}
+/* floating buttons (how to play / fullscreen / auto-play) follow the theme too */
+@media(prefers-reduced-motion:reduce){html body canvas,html body #bar h1{animation:none}}
