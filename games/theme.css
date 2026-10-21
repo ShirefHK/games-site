@@ -47,3 +47,12 @@ html body main button.sec,html body main .opt{background:var(--g-raised);color:v
 html body main input,html body main select,html body main textarea{background:var(--g-panel-h);color:var(--g-ink);border:1px solid var(--g-edge);border-radius:8px}
 /* floating buttons (how to play / fullscreen / auto-play) follow the theme too */
 @media(prefers-reduced-motion:reduce){html body canvas,html body #bar h1{animation:none}}
+/* phones: tighter chrome, page always fills the screen */
+html body{min-height:100vh;min-height:100dvh;overscroll-behavior:none}
+@media(max-width:600px){
+  html body{padding:6px 6px 14px}
+  html body #bar,html body main>.row:first-child{top:4px;padding:5px 6px 5px 14px;margin-bottom:0}
+  html body #bar h1,html body main h1{font-size:17px}
+  html body #bar a,html body main>.row:first-child a{padding:5px 11px;font-size:12px}
+  html body canvas{margin-top:8px;border-radius:10px}
+}

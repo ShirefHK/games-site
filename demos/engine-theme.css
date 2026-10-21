@@ -74,4 +74,6 @@ h1{background:linear-gradient(90deg,var(--ink),var(--accent),var(--ink));backgro
 .caret{display:inline-block;width:7px;height:1em;background:var(--teal);vertical-align:-2px;margin-left:2px;animation:blink 1s steps(1) infinite}
 button,.btn,.seg button{transition:transform .2s,box-shadow .2s,background .2s}
 button:not(:disabled):hover{transform:translateY(-1px);box-shadow:0 5px 16px -5px var(--glow)}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}.panel.rv{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}.panel.rv{opacity:1;transform:none}}/* phones: shorter menu bar so it is not cut off, no sideways scroll */
+html,body{overflow-x:hidden}
+@media(max-width:600px){body::before{content:"\25C6  SH.engine    File  Demos  Window";padding:0 10px}}
