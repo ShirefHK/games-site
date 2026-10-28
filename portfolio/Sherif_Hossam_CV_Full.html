@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sherif Hossam — Software Engineer (Unity), 10 Years — Full CV</title>
+<style>
+  :root {
+    --navy: #1f3a5f;
+    --navy-dark: #16293f;
+    --ink: #1c2733;
+    --muted: #5b6b7c;
+    --border: #d9e0e7;
+    --accent: #2f6fb0;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: "Segoe UI", Calibri, Arial, sans-serif;
+    color: var(--ink);
+    background: #f4f6f8;
+  }
+  .page {
+    width: 210mm;
+    min-height: 297mm;
+    margin: 0 auto;
+    background: #fff;
+    padding: 14mm 16mm;
+  }
+  h1.name { font-size: 24px; margin: 0 0 2px; color: var(--navy-dark); }
+  p.headline { font-size: 13px; color: var(--accent); font-weight: 600; margin: 0 0 6px; }
+  p.contact-line { font-size: 11px; color: var(--muted); margin: 0 0 12px; }
+  p.contact-line span:not(:last-child)::after { content: " \00b7 "; }
+  p.contact-line a { color: var(--muted); text-decoration: none; }
+
+  h2.sec {
+    font-size: 11.5px; text-transform: uppercase; letter-spacing: .05em;
+    color: var(--navy-dark); border-bottom: 2px solid var(--navy-dark);
+    padding-bottom: 3px; margin: 12px 0 7px;
+  }
+  p.summary { font-size: 11.5px; line-height: 1.5; margin: 0; }
+
+  .pills { display: flex; flex-wrap: wrap; gap: 5px; }
+  .pill { background: #eaf1f8; color: var(--navy-dark); font-size: 10.5px; padding: 3px 8px; border-radius: 9px; }
+  .pill.gap { background: #fbeceb; color: #8a3a32; }
+
+  .xp-item { margin-bottom: 9px; }
+  .xp-item:last-child { margin-bottom: 0; }
+  .xp-top { display: flex; justify-content: space-between; font-size: 12.5px; font-weight: 700; }
+  .xp-top .role { color: var(--navy-dark); }
+  .xp-top .dates { color: var(--muted); font-weight: 600; font-size: 11px; }
+  .xp-sub { display: flex; justify-content: space-between; font-size: 11px; color: var(--accent); font-weight: 600; font-style: italic; margin-bottom: 3px; }
+  .xp-sub .loc { color: var(--muted); font-weight: 400; font-style: normal; }
+  ul.bullets { margin: 3px 0 0; padding-left: 16px; font-size: 11px; line-height: 1.45; }
+  ul.bullets li { margin-bottom: 1px; }
+
+  .earlier { font-size: 10.5px; line-height: 1.5; color: var(--muted); margin: 0; }
+  .earlier b { color: var(--ink); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+  .ed-item { font-size: 11px; margin-bottom: 4px; }
+  .ed-item b { color: var(--navy-dark); }
+  .lang-cert-row { font-size: 11px; }
+  .lang-cert-row span:not(:last-child)::after { content: " \00b7 "; }
+
+  @media print {
+    body { background: #fff; }
+    .page { margin: 0; box-shadow: none; width: auto; min-height: 0; padding: 10mm 14mm; }
+    @page { size: A4; margin: 0; }
+  }
+  .print-btn {
+    position: fixed; top: 10px; right: 10px; background: var(--accent); color: #fff;
+    border: none; padding: 8px 14px; border-radius: 6px; font-size: 13px; cursor: pointer;
+  }
+  @media print { .print-btn { display: none; } }
+</style>
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">Print / Save as PDF</button>
+
+<div class="page">
+  <h1 class="name">Sherif Hossam</h1>
+  <p class="headline">Software Engineer (Unity) — 10 Years, Real-Time 3D / VR / AR</p>
+  <p class="contact-line">
+    <span>+201061740212</span>
+    <span>sherif.hossam.k@gmail.com</span>
+    <span>Cairo, Egypt</span>
+    <span><a href="https://www.linkedin.com/in/sherif-hossam-90273a114">linkedin.com/in/sherif-hossam-90273a114</a></span>
+    <span><a href="https://drive.google.com/drive/folders/1K8xNds-ghi9FOtxBkNpq7GwjP7oGXze2">Project Demos</a></span>
+  </p>
+
+  <h2 class="sec">Summary</h2>
+  <p class="summary">
+    Unity/C# engineer with a decade of experience building real-time 3D, VR, and AR systems — from a
+    production BIM viewer's UI and headless server tooling to AI-driven virtual avatars, architectural
+    visualization pipelines, and multiplayer 3D platforms. Consistent focus on performance: reducing build
+    size, optimizing rendering budgets, and keeping complex real-time environments running smoothly on real
+    hardware. Now expanding into AI-integrated products, building on hands-on speech-to-text/text-to-speech
+    and conversational-avatar experience.
+  </p>
+
+  <h2 class="sec">Skills</h2>
+  <div class="pills">
+    <span class="pill">C# (10 yrs, production)</span>
+    <span class="pill">Unity Engine (3D, VR/AR/XR, 2020+)</span>
+    <span class="pill">OOP, Data Structures &amp; Design Patterns</span>
+    <span class="pill">Client/Server &amp; API System Design (Node.js Sockets)</span>
+    <span class="pill">Docker / Linux Server Infrastructure</span>
+    <span class="pill">Performance &amp; GPU/Mesh Profiling</span>
+    <span class="pill">Git &amp; CI/CD (GitLab)</span>
+    <span class="pill">HTML5, CSS, JavaScript</span>
+    <span class="pill">Code Review &amp; Technical Documentation</span>
+    <span class="pill">Cross-Functional Agile Collaboration</span>
+    <span class="pill">ARKit/ARCore Device-XR Integration</span>
+    <span class="pill">Blender/Maya Asset Pipeline</span>
+  </div>
+
+  <h2 class="sec">Experience</h2>
+
+  <div class="xp-item">
+    <div class="xp-top"><span class="role">Software Engineer</span><span class="dates">Dec 2021 – Present</span></div>
+    <div class="xp-sub"><span>PlanRadar</span><span class="loc">Cairo, Egypt</span></div>
+    <ul class="bullets">
+      <li>Build and own the UI layer of a production BIM viewer as top author (~1,150 commits, 55% of that subsystem's history), shipped across iOS, Android, Web (WebGL), and UWP.</li>
+      <li>Built and operate headless Linux/Docker infrastructure (xvfb) to run the renderer server-side, generating automated model snapshots, pin-position images, and memory reports via a server-side pipeline — the closest thing in this history to a deployed web service.</li>
+      <li>Root-caused a mobile GPU/mesh-rendering bottleneck end-to-end and shipped a batched, GPU-instanced rewrite cutting memory up to 92% on the heaviest BIM models (3.56GB → 272.5MB) and load time from 5.56s to ~3s.</li>
+      <li>Traced a build-size regression to compiler configuration and unused packages, cutting build size ~25%; resolved 500+ issues from a concurrent queue in a distributed, cross-functional Agile/GitLab CI workflow; authored internal technical documentation.</li>
+      <li>Reviewed teammates' pull requests and mentored on the subsystem as its top committer; coordinated task breakdown within the team.</li>
+      <li>Built a device-XR (ARKit/ARCore) flow that aligns an IFC/BIM model onto scanned real-world geometry (device LiDAR).</li>
+    </ul>
+  </div>
+
+  <div class="xp-item">
+    <div class="xp-top"><span class="role">Software Engineer</span><span class="dates">Oct 2017 – May 2021</span></div>
+    <div class="xp-sub"><span>Elibre DMCC</span><span class="loc">Cairo, Egypt</span></div>
+    <ul class="bullets">
+      <li>Owned a real-time VR/AR rendering pipeline converting 2D architectural drawings into fully furnished, lit 3D scenes with automatic furniture placement, tuned for real headset hardware.</li>
+      <li>Built a HoloLens AR application for shared, multi-user real-time walkthroughs of 3D building models.</li>
+    </ul>
+  </div>
+
+  <div class="xp-item">
+    <div class="xp-top"><span class="role">Software Engineer</span><span class="dates">Mar 2020 – Dec 2021</span></div>
+    <div class="xp-sub"><span>BE-STEAM</span><span class="loc">Cairo, Egypt</span></div>
+    <ul class="bullets">
+      <li>Built a Unity 3D robot-programming simulator with simulated sensors, live telemetry, and real-time scoring, rebuilt each season under new competition constraints.</li>
+      <li>Built a custom Unity Editor tool — a visual, node/block-based program editor (conceptually similar to Unreal's Blueprints, but built for Unity) — where users drag-and-drop program blocks (e.g. move, turn, read-sensor) to construct robot logic; each added block compiled into executable script and could be previewed live to see the resulting robot behavior before running the full simulation.</li>
+    </ul>
+  </div>
+
+  <div class="xp-item">
+    <div class="xp-top"><span class="role">Senior Computer Engineer</span><span class="dates">Dec 2016 – Oct 2017</span></div>
+    <div class="xp-sub"><span>Arab Builders</span><span class="loc">Giza, Egypt</span></div>
+    <ul class="bullets">
+      <li>Built a multiplayer server from scratch in Node.js and integrated it with a Unity client via a socket API to synchronize all connected users in a shared real-time environment — client/server system design, state synchronization, and API integration, end to end.</li>
+    </ul>
+  </div>
+
+  <p class="earlier">
+    <b>Earlier:</b> Freelancer.com (2013–2016) — commercial Unity projects (casual/advergame) for
+    international clients; Tronixs Egypt (2016–2017) — hardware-integrated real-time simulator interface;
+    Arabtesting (2019, contract) — VR exposure-therapy application (anxiety/phobia treatment); INTDV (2021,
+    contract) — AI conversational avatar with real-time lip-sync.
+  </p>
+
+  <div class="two-col">
+    <div>
+      <h2 class="sec">Education</h2>
+      <div class="ed-item"><b>Cairo University</b> — Pre-Master, Computer Engineering (2013–2014)</div>
+      <div class="ed-item"><b>Misr Institute for Engineering &amp; Technology</b> — B.Sc. Computer Engineering &amp; Systems (2008–2013)</div>
+    </div>
+    <div>
+      <h2 class="sec">Languages</h2>
+      <div class="lang-cert-row"><span>Arabic (Native)</span><span>English (Full Professional)</span><span>German (Basic)</span></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sherif Hossam — CV Builder</title>
+<style>
+  :root {
+    --navy: #16293f;
+    --navy2: #1f3a5f;
+    --accent: #3f8ae0;
+    --ink: #222;
+    --muted: #6b7684;
+    --border: #e3e7eb;
+    --bg: #f4f6f8;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Calibri, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--navy); color: #fff;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 20px; flex-wrap: wrap; gap: 8px;
+  }
+  .topbar .title { font-weight: 700; font-size: 14px; }
+  .topbar .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .topbar button, .topbar a {
+    background: rgba(255,255,255,0.12); color: #fff; border: none;
+    padding: 8px 14px; border-radius: 6px; font-size: 12.5px;
+    text-decoration: none; cursor: pointer; font-family: inherit;
+  }
+  .topbar button.primary { background: var(--accent); }
+  .topbar .saved-msg { font-size: 11.5px; color: #b9c6d4; align-self: center; }
+
+  .wrap { max-width: 900px; margin: 24px auto; padding: 0 16px 60px; }
+
+  .card {
+    background: #fff; border: 1px solid var(--border); border-radius: 10px;
+    padding: 20px 22px; margin-bottom: 18px; box-shadow: 0 2px 10px rgba(20,30,40,0.05);
+  }
+  .card h2 {
+    font-size: 13px; text-transform: uppercase; letter-spacing: .06em;
+    color: var(--navy); margin: 0 0 14px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent);
+  }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grid4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; }
+  @media (max-width: 700px) { .grid2, .grid4 { grid-template-columns: 1fr; } }
+
+  label { display: block; font-size: 11.5px; color: var(--muted); margin-bottom: 4px; font-weight: 600; }
+  input[type=text], input[type=email], input[type=url], textarea, select {
+    width: 100%; padding: 8px 10px; border: 1px solid var(--border); border-radius: 6px;
+    font-size: 13px; font-family: inherit; color: var(--ink); margin-bottom: 12px; background: #fbfcfd;
+  }
+  textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
+  textarea.bullets { min-height: 100px; }
+  input:focus, textarea:focus { outline: none; border-color: var(--accent); background: #fff; }
+
+  .entry {
+    border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px 2px;
+    margin-bottom: 14px; position: relative; background: #fbfcfd;
+  }
+  .entry-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .entry-num { font-size: 11px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+  .btn-remove {
+    background: #fbeceb; color: #8a3a32; border: none; padding: 5px 10px;
+    border-radius: 5px; font-size: 11.5px; cursor: pointer;
+  }
+  .btn-add {
+    background: #eaf1f8; color: var(--navy); border: 1px dashed var(--accent);
+    padding: 9px 14px; border-radius: 6px; font-size: 12.5px; cursor: pointer;
+    width: 100%; font-family: inherit; font-weight: 600;
+  }
+  .hint { font-size: 11px; color: var(--muted); margin: -6px 0 12px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <span class="title">CV Builder — Sherif Hossam</span>
+  <div class="actions">
+    <span class="saved-msg" id="savedMsg"></span>
+    <button onclick="saveState()">Save</button>
+    <button class="primary" onclick="saveAndOpen()">Open Visual Resume</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="card">
+    <h2>Contact</h2>
+    <div class="grid2">
+      <div><label>Full name</label><input type="text" id="f-name"></div>
+      <div><label>Headline / title</label><input type="text" id="f-title"></div>
+      <div><label>Phone</label><input type="text" id="f-phone"></div>
+      <div><label>Email</label><input type="email" id="f-email"></div>
+      <div><label>Location</label><input type="text" id="f-location"></div>
+      <div><label>LinkedIn URL</label><input type="url" id="f-linkedin"></div>
+      <div><label>GitHub URL</label><input type="url" id="f-github" placeholder="https://github.com/your-username"></div>
+      <div><label>Portfolio / demos URL</label><input type="url" id="f-portfolio"></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Summary</h2>
+    <textarea id="f-summary" rows="5"></textarea>
+  </div>
+
+  <div class="card">
+    <h2>Skills</h2>
+    <label>Comma-separated list</label>
+    <textarea id="f-skills" rows="2"></textarea>
+  </div>
+
+  <div class="card">
+    <h2>Experience</h2>
+    <div class="hint">Bullets: one per line.</div>
+    <div id="exp-list"></div>
+    <button class="btn-add" onclick="addExp()">+ Add experience entry</button>
+  </div>
+
+  <div class="card">
+    <h2>Projects</h2>
+    <div id="proj-list"></div>
+    <button class="btn-add" onclick="addProj()">+ Add project</button>
+  </div>
+
+  <div class="card">
+    <h2>Education</h2>
+    <div id="edu-list"></div>
+    <button class="btn-add" onclick="addEdu()">+ Add education entry</button>
+  </div>
+
+  <div class="card">
+    <h2>Languages</h2>
+    <div id="lang-list"></div>
+    <button class="btn-add" onclick="addLang()">+ Add language</button>
+  </div>
+
+  <div class="card">
+    <h2>Certifications &amp; Honors</h2>
+    <div id="cert-list"></div>
+    <button class="btn-add" onclick="addCert()">+ Add certification</button>
+  </div>
+
+</div>
+
+<script>
+const STORAGE_KEY = 'cv-webform-data-v1';
+
+const DEFAULT_STATE = {
+  name: "Sherif Hossam",
+  title: "Software Engineer (Unity)",
+  phone: "+201061740212",
+  email: "sherif.hossam.k@gmail.com",
+  location: "Cairo, Egypt",
+  linkedin: "https://www.linkedin.com/in/sherif-hossam-90273a114",
+  github: "",
+  portfolio: "https://drive.google.com/drive/folders/1K8xNds-ghi9FOtxBkNpq7GwjP7oGXze2",
+  photo: null,
+  summary: "Unity/C# engineer with a decade of experience building real-time 3D, VR, and AR systems — from a production BIM viewer's UI and headless server tooling to AI-driven virtual avatars, architectural visualization pipelines, and multiplayer 3D platforms. Consistent focus on performance: reducing build size, optimizing rendering budgets, and keeping complex real-time environments running smoothly on real hardware. Now expanding into AI-integrated products, building on hands-on speech-to-text/text-to-speech and conversational-avatar experience.",
+  skills: "C, C#, Unity Pro, OOP & Design Patterns, Optimization, Docker, GitLab CI, Build Tooling, Headless/Server-side Rendering, UI Architecture, VR/3D Simulation, ARKit/ARCore, HTML5/CSS/JavaScript",
+  experience: [
+    {
+      title: "Software Engineer", company: "PlanRadar", location: "Cairo, Egypt",
+      start: "Dec 2021", end: "Present",
+      bullets: "Build and own the UI layer of a production BIM viewer as top author (~1,150 commits, 55% of that subsystem's history), shipped across iOS, Android, Web (WebGL), and UWP.\nBuilt and operate headless Linux/Docker infrastructure (xvfb) to run the renderer server-side, generating automated model snapshots, pin-position images, and memory reports via a server-side pipeline.\nRoot-caused a mobile GPU/mesh-rendering bottleneck end-to-end and shipped a batched, GPU-instanced rewrite cutting memory up to 92% on the heaviest BIM models (3.56GB → 272.5MB) and load time from 5.56s to ~3s.\nTraced a build-size regression to compiler configuration and unused packages, cutting build size ~25%; resolved 500+ issues from a concurrent queue in a distributed, cross-functional Agile/GitLab CI workflow; authored internal technical documentation.\nReviewed teammates' pull requests and mentored on the subsystem as its top committer; coordinated task breakdown within the team.\nBuilt a device-XR (ARKit/ARCore) flow that aligns an IFC/BIM model onto scanned real-world geometry (device LiDAR)."
+    },
+    {
+      title: "Software Engineer", company: "Elibre DMCC", location: "Cairo, Egypt",
+      start: "Oct 2017", end: "May 2021",
+      bullets: "Owned a real-time VR/AR rendering pipeline converting 2D architectural drawings into fully furnished, lit 3D scenes with automatic furniture placement, tuned for real headset hardware.\nBuilt a HoloLens AR application for shared, multi-user real-time walkthroughs of 3D building models."
+    },
+    {
+      title: "Software Engineer", company: "BE-STEAM", location: "Cairo, Egypt",
+      start: "Mar 2020", end: "Dec 2021",
+      bullets: "Built a Unity 3D robot-programming simulator with simulated sensors, live telemetry, and real-time scoring, rebuilt each season under new competition constraints.\nBuilt a custom Unity Editor tool — a visual, node/block-based program editor (conceptually similar to Unreal's Blueprints, but built for Unity) — where users drag-and-drop program blocks (e.g. move, turn, read-sensor) to construct robot logic; each added block compiled into executable script and could be previewed live to see the resulting robot behavior before running the full simulation."
+    },
+    {
+      title: "Senior Computer Engineer", company: "Arab Builders", location: "Giza, Egypt",
+      start: "Dec 2016", end: "Oct 2017",
+      bullets: "Built a multiplayer server from scratch in Node.js and integrated it with a Unity client via a socket API to synchronize all connected users in a shared real-time environment — client/server system design, state synchronization, and API integration, end to end."
+    },
+    {
+      title: "Freelance Unity Developer", company: "Freelancer.com", location: "Remote / International Clients",
+      start: "2013", end: "2016",
+      bullets: "Delivered commercial Unity projects (casual/advergame) for international clients as an independent contractor."
+    },
+    {
+      title: "Hardware/Simulator Engineer", company: "Tronixs Egypt", location: "Cairo, Egypt",
+      start: "2016", end: "2017",
+      bullets: "Built a hardware-integrated real-time simulator interface."
+    },
+    {
+      title: "VR Developer (Contract)", company: "Arabtesting", location: "Cairo, Egypt",
+      start: "2019", end: "2019",
+      bullets: "Built a VR exposure-therapy application for anxiety/phobia treatment."
+    },
+    {
+      title: "AI/Unity Developer (Contract)", company: "INTDV", location: "Remote",
+      start: "2021", end: "2021",
+      bullets: "Built an AI conversational avatar with real-time lip-sync, integrating speech-to-text/text-to-speech."
+    }
+  ],
+  projects: [],
+  education: [
+    { school: "Cairo University", degree: "Pre-Master, Computer Engineering", start: "2013", end: "2014" },
+    { school: "Misr Institute for Engineering & Technology", degree: "B.Sc. Computer Engineering & Systems", start: "2008", end: "2013" }
+  ],
+  languages: [
+    { name: "Arabic", level: "Native" },
+    { name: "English", level: "Full Professional" },
+    { name: "German", level: "Elementary" }
+  ],
+  certs: []
+};
+
+function loadState() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      return Object.assign({}, DEFAULT_STATE, parsed);
+    } catch (e) { /* fall through */ }
+  }
+  return JSON.parse(JSON.stringify(DEFAULT_STATE));
+}
+
+let state = loadState();
+let savedTimer = null;
+
+function markSaved() {
+  const el = document.getElementById('savedMsg');
+  el.textContent = 'Saved ' + new Date().toLocaleTimeString();
+  clearTimeout(savedTimer);
+  savedTimer = setTimeout(() => { el.textContent = ''; }, 3000);
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  markSaved();
+}
+
+function saveAndOpen() {
+  saveState();
+  window.location.href = 'visual.html';
+}
+
+function bindTopFields() {
+  const map = {
+    'f-name': 'name', 'f-title': 'title', 'f-phone': 'phone', 'f-email': 'email',
+    'f-location': 'location', 'f-linkedin': 'linkedin', 'f-github': 'github', 'f-portfolio': 'portfolio',
+    'f-summary': 'summary', 'f-skills': 'skills'
+  };
+  for (const [id, key] of Object.entries(map)) {
+    const el = document.getElementById(id);
+    el.value = state[key] || '';
+    el.addEventListener('input', () => { state[key] = el.value; saveState(); });
+  }
+}
+
+function renderExp() {
+  const container = document.getElementById('exp-list');
+  container.innerHTML = state.experience.map((x, i) => `
+    <div class="entry">
+      <div class="entry-head">
+        <span class="entry-num">Entry ${i + 1}</span>
+        <button class="btn-remove" onclick="removeExp(${i})">Remove</button>
+      </div>
+      <div class="grid4">
+        <div><label>Job title</label><input type="text" value="${escapeAttr(x.title)}" oninput="updateExp(${i},'title',this.value)"></div>
+        <div><label>Company</label><input type="text" value="${escapeAttr(x.company)}" oninput="updateExp(${i},'company',this.value)"></div>
+        <div><label>Location</label><input type="text" value="${escapeAttr(x.location)}" oninput="updateExp(${i},'location',this.value)"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+          <div><label>Start</label><input type="text" value="${escapeAttr(x.start)}" oninput="updateExp(${i},'start',this.value)"></div>
+          <div><label>End</label><input type="text" value="${escapeAttr(x.end)}" oninput="updateExp(${i},'end',this.value)"></div>
+        </div>
+      </div>
+      <label>Bullets (one per line)</label>
+      <textarea class="bullets" oninput="updateExp(${i},'bullets',this.value)">${escapeText(x.bullets)}</textarea>
+    </div>
+  `).join('');
+}
+function addExp() {
+  state.experience.push({ title: '', company: '', location: '', start: '', end: '', bullets: '' });
+  renderExp(); saveState();
+}
+function removeExp(i) { state.experience.splice(i, 1); renderExp(); saveState(); }
+function updateExp(i, key, val) { state.experience[i][key] = val; saveState(); }
+
+function renderProj() {
+  const container = document.getElementById('proj-list');
+  container.innerHTML = state.projects.map((p, i) => `
+    <div class="entry">
+      <div class="entry-head">
+        <span class="entry-num">Project ${i + 1}</span>
+        <button class="btn-remove" onclick="removeProj(${i})">Remove</button>
+      </div>
+      <div class="grid2">
+        <div><label>Name</label><input type="text" value="${escapeAttr(p.name)}" oninput="updateProj(${i},'name',this.value)"></div>
+        <div><label>Tech</label><input type="text" value="${escapeAttr(p.tech)}" oninput="updateProj(${i},'tech',this.value)"></div>
+      </div>
+      <label>Description</label><textarea oninput="updateProj(${i},'description',this.value)">${escapeText(p.description)}</textarea>
+      <label>Link</label><input type="url" value="${escapeAttr(p.link)}" oninput="updateProj(${i},'link',this.value)">
+    </div>
+  `).join('');
+}
+function addProj() { state.projects.push({ name: '', tech: '', description: '', link: '' }); renderProj(); saveState(); }
+function removeProj(i) { state.projects.splice(i, 1); renderProj(); saveState(); }
+function updateProj(i, key, val) { state.projects[i][key] = val; saveState(); }
+
+function renderEdu() {
+  const container = document.getElementById('edu-list');
+  container.innerHTML = state.education.map((e, i) => `
+    <div class="entry">
+      <div class="entry-head">
+        <span class="entry-num">Entry ${i + 1}</span>
+        <button class="btn-remove" onclick="removeEdu(${i})">Remove</button>
+      </div>
+      <div class="grid4">
+        <div style="grid-column: span 2;"><label>School</label><input type="text" value="${escapeAttr(e.school)}" oninput="updateEdu(${i},'school',this.value)"></div>
+        <div><label>Start</label><input type="text" value="${escapeAttr(e.start)}" oninput="updateEdu(${i},'start',this.value)"></div>
+        <div><label>End</label><input type="text" value="${escapeAttr(e.end)}" oninput="updateEdu(${i},'end',this.value)"></div>
+      </div>
+      <label>Degree</label><input type="text" value="${escapeAttr(e.degree)}" oninput="updateEdu(${i},'degree',this.value)">
+    </div>
+  `).join('');
+}
+function addEdu() { state.education.push({ school: '', degree: '', start: '', end: '' }); renderEdu(); saveState(); }
+function removeEdu(i) { state.education.splice(i, 1); renderEdu(); saveState(); }
+function updateEdu(i, key, val) { state.education[i][key] = val; saveState(); }
+
+function renderLang() {
+  const container = document.getElementById('lang-list');
+  container.innerHTML = state.languages.map((l, i) => `
+    <div class="entry">
+      <div class="entry-head">
+        <span class="entry-num">Language ${i + 1}</span>
+        <button class="btn-remove" onclick="removeLang(${i})">Remove</button>
+      </div>
+      <div class="grid2">
+        <div><label>Name</label><input type="text" value="${escapeAttr(l.name)}" oninput="updateLang(${i},'name',this.value)"></div>
+        <div><label>Level</label><input type="text" value="${escapeAttr(l.level)}" oninput="updateLang(${i},'level',this.value)"></div>
+      </div>
+    </div>
+  `).join('');
+}
+function addLang() { state.languages.push({ name: '', level: '' }); renderLang(); saveState(); }
+function removeLang(i) { state.languages.splice(i, 1); renderLang(); saveState(); }
+function updateLang(i, key, val) { state.languages[i][key] = val; saveState(); }
+
+function renderCert() {
+  const container = document.getElementById('cert-list');
+  container.innerHTML = state.certs.map((c, i) => `
+    <div class="entry">
+      <div class="entry-head">
+        <span class="entry-num">Cert ${i + 1}</span>
+        <button class="btn-remove" onclick="removeCert(${i})">Remove</button>
+      </div>
+      <label>Name</label><input type="text" value="${escapeAttr(c.name)}" oninput="updateCert(${i},'name',this.value)">
+    </div>
+  `).join('');
+}
+function addCert() { state.certs.push({ name: '' }); renderCert(); saveState(); }
+function removeCert(i) { state.certs.splice(i, 1); renderCert(); saveState(); }
+function updateCert(i, key, val) { state.certs[i][key] = val; saveState(); }
+
+function escapeAttr(str) {
+  return (str || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function escapeText(str) {
+  return (str || '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+}
+
+bindTopFields();
+renderExp();
+renderProj();
+renderEdu();
+renderLang();
+renderCert();
+saveState();
+</script>
+
+</body>
+</html>
